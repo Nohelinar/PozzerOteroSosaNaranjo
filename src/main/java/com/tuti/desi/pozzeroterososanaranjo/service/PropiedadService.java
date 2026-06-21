@@ -6,8 +6,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
+import com.tuti.desi.pozzeroterososanaranjo.repository.PersonaRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PropiedadRepository;
 
 @Service
@@ -16,6 +18,9 @@ public class PropiedadService {
     @Autowired
     private PropiedadRepository propiedadRepository;
 
+    @Autowired
+    private PersonaRepository personaRepository;
+
     public List<Propiedad> listarTodas() {
         return propiedadRepository.findAll();
     }
@@ -23,6 +28,9 @@ public class PropiedadService {
     public Propiedad guardar(Propiedad propiedad) {
 
         validarPropiedad(propiedad);
+
+        Persona propietario = buscarYValidarPropietario(propiedad);
+        propiedad.setPropietario(propietario);
 
         if (propiedad.getEstadoPropiedad() == null) {
             propiedad.setEstadoPropiedad(EstadoPropiedad.DISPONIBLE);
@@ -58,15 +66,31 @@ public class PropiedadService {
         }
 
         if (propiedad.getCantidadAmbientes() == null || propiedad.getCantidadAmbientes() <= 0) {
-            throw new RuntimeException("La cantidad de ambientes debe ser un numero entero y positivo.");
+            throw new RuntimeException("La cantidad de ambientes debe ser un numero entero positivo.");
         }
 
         if (propiedad.getMetrosCuadrados() == null || propiedad.getMetrosCuadrados() <= 0) {
-            throw new RuntimeException("Los metros cuadrados deben ser un numero positivo");
+            throw new RuntimeException("Los metros cuadrados deben ser un numero positivo.");
         }
 
         if (propiedad.getDescripcion() == null || propiedad.getDescripcion().trim().isEmpty()) {
             throw new RuntimeException("La descripcion es obligatoria.");
         }
+
+        if (propiedad.getPropietario() == null || propiedad.getPropietario().getId() == null) {
+            throw new RuntimeException("El propietario es obligatorio.");
+        }
+    }
+
+    private Persona buscarYValidarPropietario(Propiedad propiedad) {
+
+        Persona propietario = personaRepository.findById(propiedad.getPropietario().getId())
+            .orElseThrow(() -> new RuntimeException("El propietario indicado no existe."));
+
+        if (Boolean.TRUE.equals(propietario.getEliminada())) {
+            throw new RuntimeException("El propietario indicado esta eliminado.");
+        }
+
+        return propietario;
     }
 }

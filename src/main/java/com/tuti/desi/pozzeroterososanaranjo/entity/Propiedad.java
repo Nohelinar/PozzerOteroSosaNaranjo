@@ -1,3 +1,4 @@
+
 package com.tuti.desi.pozzeroterososanaranjo.entity;
 
 import javax.persistence.Entity;
@@ -6,7 +7,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
@@ -35,6 +37,10 @@ public class Propiedad {
     private EstadoPropiedad estadoPropiedad;
 
     private Boolean eliminada;
+
+    @ManyToOne
+    @JoinColumn(name = "propietario_id")
+    private Persona propietario;
 
     public Long getId() {
         return id;
@@ -106,5 +112,13 @@ public class Propiedad {
 
     public void setEliminada(Boolean eliminada) {
         this.eliminada = eliminada;
+    }
+
+    public Persona getPropietario() {
+        return propietario;
+    }
+
+    public void setPropietario(Persona propietario) {
+        this.propietario = propietario;
     }
 }
