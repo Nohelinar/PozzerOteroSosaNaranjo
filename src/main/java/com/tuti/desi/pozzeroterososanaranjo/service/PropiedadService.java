@@ -1,14 +1,18 @@
 
 package com.tuti.desi.pozzeroterososanaranjo.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.tuti.desi.pozzeroterososanaranjo.entity.HistorialEstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
+import com.tuti.desi.pozzeroterososanaranjo.repository.HistorialEstadoPropiedadRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PersonaRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PropiedadRepository;
 
@@ -21,11 +25,17 @@ public class PropiedadService {
     @Autowired
     private PersonaRepository personaRepository;
 
+    @Autowired
+    private HistorialEstadoPropiedadRepository historialEstadoPropiedadRepository;
+
     public List<Propiedad> listarTodas() {
         return propiedadRepository.findAll();
     }
 
+    @Transactional
     public Propiedad guardar(Propiedad propiedad) {
+
+        boolean esNueva = propiedad.getId() == null;
 
         validarPropiedad(propiedad);
 
@@ -40,7 +50,7 @@ public class PropiedadService {
             propiedad.setEliminada(false);
         }
 
-        if (propiedad.getId() == null &&
+        if (esNueva &&
             propiedadRepository.existsByDireccionAndCiudadAndEliminadaFalse(
                 propiedad.getDireccion(),
                 propiedad.getCiudad()
@@ -48,7 +58,13 @@ public class PropiedadService {
             throw new RuntimeException("Ya existe una propiedad activa con la misma direccion y ciudad.");
         }
 
-        return propiedadRepository.save(propiedad);
+        Propiedad propiedadGuardada = propiedadRepository.save(propiedad);
+
+        if (esNueva) {
+            guardarHistorialEstado(propiedadGuardada);
+        }
+
+        return propiedadGuardada;
     }
 
     private void validarPropiedad(Propiedad propiedad) {
@@ -92,5 +108,15 @@ public class PropiedadService {
         }
 
         return propietario;
+    }
+
+    private void guardarHistorialEstado(Propiedad propiedad) {
+
+        HistorialEstadoPropiedad historial = new HistorialEstadoPropiedad();
+        historial.setPropiedad(propiedad);
+        historial.setEstadoPropiedad(propiedad.getEstadoPropiedad());
+        historial.setFechaCambio(LocalDateTime.now());
+
+        historialEstadoPropiedadRepository.save(historial);
     }
 }
