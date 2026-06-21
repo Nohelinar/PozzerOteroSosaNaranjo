@@ -1,0 +1,23 @@
+
+package com.tuti.desi.pozzeroterososanaranjo.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
+import com.tuti.desi.pozzeroterososanaranjo.service.PropiedadService;
+
+@RestController
+public class PropiedadController {
+
+    @Autowired
+    private PropiedadService propiedadService;
+
+    @GetMapping("/propiedades")
+    public List<Propiedad> listarPropiedades() {
+        return propiedadService.listarTodas();
+    }
+}
