@@ -20,6 +20,15 @@ public class PropiedadService {
     }
 
     public Propiedad guardar(Propiedad propiedad) {
+
+        if (propiedad.getId() == null &&
+            propiedadRepository.existsByDireccionAndCiudadAndEliminadaFalse(
+                propiedad.getDireccion(),
+                propiedad.getCiudad()
+            )) {
+            throw new RuntimeException("Ya existe una propiedad activa con la misma direccion y ciudad.");
+        }
+
         return propiedadRepository.save(propiedad);
     }
 }
