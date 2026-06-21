@@ -22,6 +22,8 @@ public class PropiedadService {
 
     public Propiedad guardar(Propiedad propiedad) {
 
+        validarPropiedad(propiedad);
+
         if (propiedad.getEstadoPropiedad() == null) {
             propiedad.setEstadoPropiedad(EstadoPropiedad.DISPONIBLE);
         }
@@ -39,5 +41,32 @@ public class PropiedadService {
         }
 
         return propiedadRepository.save(propiedad);
+    }
+
+    private void validarPropiedad(Propiedad propiedad) {
+
+        if (propiedad.getDireccion() == null || propiedad.getDireccion().trim().isEmpty()) {
+            throw new RuntimeException("La direccion es obligatoria.");
+        }
+
+        if (propiedad.getCiudad() == null || propiedad.getCiudad().trim().isEmpty()) {
+            throw new RuntimeException("La ciudad es obligatoria.");
+        }
+
+        if (propiedad.getTipoPropiedad() == null) {
+            throw new RuntimeException("El tipo de propiedad es obligatorio.");
+        }
+
+        if (propiedad.getCantidadAmbientes() == null || propiedad.getCantidadAmbientes() <= 0) {
+            throw new RuntimeException("La cantidad de ambientes debe ser un numero entero y positivo.");
+        }
+
+        if (propiedad.getMetrosCuadrados() == null || propiedad.getMetrosCuadrados() <= 0) {
+            throw new RuntimeException("Los metros cuadrados deben ser un numero positivo");
+        }
+
+        if (propiedad.getDescripcion() == null || propiedad.getDescripcion().trim().isEmpty()) {
+            throw new RuntimeException("La descripcion es obligatoria.");
+        }
     }
 }
