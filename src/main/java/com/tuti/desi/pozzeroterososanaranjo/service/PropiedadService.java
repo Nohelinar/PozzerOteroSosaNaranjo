@@ -29,7 +29,7 @@ public class PropiedadService {
     private HistorialEstadoPropiedadRepository historialEstadoPropiedadRepository;
 
     public List<Propiedad> listarTodas() {
-        return propiedadRepository.findAll();
+    return propiedadRepository.findByEliminadaFalse();
     }
 
     @Transactional
