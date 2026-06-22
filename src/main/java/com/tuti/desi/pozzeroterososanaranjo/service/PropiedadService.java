@@ -29,7 +29,7 @@ public class PropiedadService {
     private HistorialEstadoPropiedadRepository historialEstadoPropiedadRepository;
 
     public List<Propiedad> listarTodas() {
-    return propiedadRepository.findByEliminadaFalse();
+        return propiedadRepository.findByEliminadaFalse();
     }
 
     @Transactional
@@ -65,6 +65,20 @@ public class PropiedadService {
         }
 
         return propiedadGuardada;
+    }
+
+    @Transactional
+    public void eliminarLogicamente(Long id) {
+
+        Propiedad propiedad = propiedadRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
+
+        if (Boolean.TRUE.equals(propiedad.getEliminada())) {
+            throw new RuntimeException("La propiedad ya se encuentra eliminada.");
+        }
+
+        propiedad.setEliminada(true);
+        propiedadRepository.save(propiedad);
     }
 
     private void validarPropiedad(Propiedad propiedad) {
