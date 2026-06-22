@@ -68,6 +68,52 @@ public class PropiedadService {
     }
 
     @Transactional
+    public Propiedad modificar(Long id, Propiedad propiedadActualizada) {
+
+        Propiedad propiedadExistente = propiedadRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
+
+        if (Boolean.TRUE.equals(propiedadExistente.getEliminada())) {
+            throw new RuntimeException("No se puede modificar una propiedad eliminada.");
+        }
+
+        validarPropiedad(propiedadActualizada);
+
+        if (propiedadActualizada.getEstadoPropiedad() == null) {
+            throw new RuntimeException("El estado de propiedad es obligatorio.");
+        }
+
+        Persona propietario = buscarYValidarPropietario(propiedadActualizada);
+
+        if (propiedadRepository.existsByDireccionAndCiudadAndEliminadaFalseAndIdNot(
+            propiedadActualizada.getDireccion(),
+            propiedadActualizada.getCiudad(),
+            id
+        )) {
+            throw new RuntimeException("Ya existe otra propiedad activa con la misma direccion y ciudad.");
+        }
+
+        EstadoPropiedad estadoAnterior = propiedadExistente.getEstadoPropiedad();
+
+        propiedadExistente.setDireccion(propiedadActualizada.getDireccion());
+        propiedadExistente.setCiudad(propiedadActualizada.getCiudad());
+        propiedadExistente.setTipoPropiedad(propiedadActualizada.getTipoPropiedad());
+        propiedadExistente.setCantidadAmbientes(propiedadActualizada.getCantidadAmbientes());
+        propiedadExistente.setMetrosCuadrados(propiedadActualizada.getMetrosCuadrados());
+        propiedadExistente.setDescripcion(propiedadActualizada.getDescripcion());
+        propiedadExistente.setEstadoPropiedad(propiedadActualizada.getEstadoPropiedad());
+        propiedadExistente.setPropietario(propietario);
+
+        Propiedad propiedadGuardada = propiedadRepository.save(propiedadExistente);
+
+        if (estadoAnterior != propiedadGuardada.getEstadoPropiedad()) {
+            guardarHistorialEstado(propiedadGuardada);
+        }
+
+        return propiedadGuardada;
+    }
+
+    @Transactional
     public void eliminarLogicamente(Long id) {
 
         Propiedad propiedad = propiedadRepository.findById(id)
