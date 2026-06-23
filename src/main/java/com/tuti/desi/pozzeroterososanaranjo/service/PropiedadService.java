@@ -2,6 +2,7 @@
 package com.tuti.desi.pozzeroterososanaranjo.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import com.tuti.desi.pozzeroterososanaranjo.entity.HistorialEstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
+import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.repository.HistorialEstadoPropiedadRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PersonaRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PropiedadRepository;
@@ -30,6 +32,37 @@ public class PropiedadService {
 
     public List<Propiedad> listarTodas() {
         return propiedadRepository.findByEliminadaFalse();
+    }
+
+    public List<Propiedad> listarConFiltros(
+        String direccion,
+        String ciudad,
+        TipoPropiedad tipoPropiedad,
+        EstadoPropiedad estadoPropiedad
+    ) {
+        List<Propiedad> propiedades = propiedadRepository.findByEliminadaFalse();
+        List<Propiedad> propiedadesFiltradas = new ArrayList<>();
+
+        for (Propiedad propiedad : propiedades) {
+
+            boolean cumpleDireccion = direccion == null || direccion.trim().isEmpty()
+                || contieneTexto(propiedad.getDireccion(), direccion);
+
+            boolean cumpleCiudad = ciudad == null || ciudad.trim().isEmpty()
+                || contieneTexto(propiedad.getCiudad(), ciudad);
+
+            boolean cumpleTipo = tipoPropiedad == null
+                || tipoPropiedad.equals(propiedad.getTipoPropiedad());
+
+            boolean cumpleEstado = estadoPropiedad == null
+                || estadoPropiedad.equals(propiedad.getEstadoPropiedad());
+
+            if (cumpleDireccion && cumpleCiudad && cumpleTipo && cumpleEstado) {
+                propiedadesFiltradas.add(propiedad);
+            }
+        }
+
+        return propiedadesFiltradas;
     }
 
     @Transactional
@@ -178,5 +211,14 @@ public class PropiedadService {
         historial.setFechaCambio(LocalDateTime.now());
 
         historialEstadoPropiedadRepository.save(historial);
+    }
+
+    private boolean contieneTexto(String textoCompleto, String textoBuscado) {
+
+        if (textoCompleto == null) {
+            return false;
+        }
+
+        return textoCompleto.toLowerCase().contains(textoBuscado.toLowerCase().trim());
     }
 }

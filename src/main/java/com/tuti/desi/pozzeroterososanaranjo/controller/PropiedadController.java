@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
+import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.service.PropiedadService;
 
 @RestController
@@ -23,8 +26,13 @@ public class PropiedadController {
     private PropiedadService propiedadService;
 
     @GetMapping("/propiedades")
-    public List<Propiedad> listarPropiedades() {
-        return propiedadService.listarTodas();
+    public List<Propiedad> listarPropiedades(
+        @RequestParam(required = false) String direccion,
+        @RequestParam(required = false) String ciudad,
+        @RequestParam(required = false) TipoPropiedad tipoPropiedad,
+        @RequestParam(required = false) EstadoPropiedad estadoPropiedad
+    ) {
+        return propiedadService.listarConFiltros(direccion, ciudad, tipoPropiedad, estadoPropiedad);
     }
 
     @PostMapping("/propiedades")
