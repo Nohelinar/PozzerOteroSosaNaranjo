@@ -1,39 +1,54 @@
 
 body {
-    font-family: Arial, sans-serif;
-    margin: 30px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 14px;
+    margin: 0;
+    background-color: white;
+}
+
+.contenedor {
+    margin-top: 40px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 h1 {
     color: #1f4e79;
+    font-size: 28px;
+    margin-bottom: 25px;
 }
 
 form {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 label {
+    display: inline-block;
+    width: 150px;
     font-weight: bold;
-    margin-right: 5px;
 }
 
-input, select {
-    margin-right: 15px;
-    padding: 5px;
+input, select, textarea {
+    font-family: "Times New Roman", Times, serif;
+    font-size: 14px;
+    padding: 3px;
 }
 
 button, a.boton {
     display: inline-block;
-    padding: 6px 10px;
-    margin-right: 5px;
+    box-sizing: border-box;
+    height: 28px;
+    line-height: 18px;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 13px;
+    padding: 4px 10px;
+    margin-right: 4px;
     text-decoration: none;
-    border: 1px solid #555;
+    border: 1px solid #888;
     background-color: #eeeeee;
     color: black;
     cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
-    line-height: normal;
+    vertical-align: middle;
 }
 
 button:hover, a.boton:hover {
@@ -42,45 +57,46 @@ button:hover, a.boton:hover {
 
 table {
     border-collapse: collapse;
-    width: 100%;
-    margin-top: 15px;
+    margin-top: 10px;
 }
 
 th {
-    background-color: #1f4e79;
+    background-color: #3cb043;
     color: white;
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: 4px 8px;
+    border: 1px solid white;
 }
 
 td {
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: 4px 8px;
+    border: 1px solid #eeeeee;
+    vertical-align: middle;
+}
+
+td form {
+    margin: 0;
+}
+
+tr:nth-child(even) {
+    background-color: #eeeeee;
 }
 
 .mensaje-error {
     color: red;
     font-weight: bold;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
 }
 
 .acciones {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
 }
 
 .acciones form {
     margin: 0;
 }
 
-.acciones button,
-.acciones a.boton {
-    height: auto;
-}
-
-textarea {
-    padding: 5px;
-    font-family: Arial, sans-serif;
-    font-size: 14px;
+.formulario-edicion p {
+    margin: 9px 0;
 }

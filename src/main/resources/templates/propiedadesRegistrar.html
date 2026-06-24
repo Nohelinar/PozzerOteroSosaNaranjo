@@ -3,14 +3,14 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Editar Propiedad</title>
+    <title>Registrar Propiedad</title>
     <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
 </head>
 <body>
 
 <div class="contenedor">
 
-    <h1>Editar Propiedad</h1>
+    <h1>Registrar Propiedad</h1>
 
     <div th:if="${error}" class="mensaje-error">
         <span th:text="${error}"></span>
@@ -18,14 +18,9 @@
 
     <form class="formulario-edicion"
           action="#"
-          th:action="@{/propiedades/guardar/{id}(id=${propiedad.id})}"
+          th:action="@{/propiedades/registrar}"
           method="post"
           th:object="${propiedad}">
-
-        <p>
-            <label>ID:</label>
-            <span th:text="${propiedad.id}"></span>
-        </p>
 
         <p>
             <label>Dirección:</label>
@@ -40,6 +35,7 @@
         <p>
             <label>Tipo de propiedad:</label>
             <select th:field="*{tipoPropiedad}" required>
+                <option value="">Seleccione</option>
                 <option th:each="tipo : ${tiposPropiedad}"
                         th:value="${tipo}"
                         th:text="${tipo}">
@@ -75,6 +71,7 @@
         <p>
             <label>Propietario:</label>
             <select th:field="*{propietario.id}" required>
+                <option value="">Seleccione</option>
                 <option th:each="persona : ${personas}"
                         th:value="${persona.id}"
                         th:text="${persona.nombre + ' ' + persona.apellido}">

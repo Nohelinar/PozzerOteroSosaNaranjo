@@ -1,6 +1,8 @@
 
 package com.tuti.desi.pozzeroterososanaranjo.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
@@ -43,14 +46,55 @@ public class PropiedadWebController {
         return "propiedadesBuscar";
     }
 
+    @GetMapping("/propiedades/registrar")
+    public String registrarPropiedad(Model model) {
+        Propiedad propiedad = new Propiedad();
+        propiedad.setEstadoPropiedad(EstadoPropiedad.DISPONIBLE);
+        propiedad.setPropietario(new Persona());
+
+        cargarDatosFormulario(model, propiedad);
+
+        return "propiedadesRegistrar";
+    }
+
+    @PostMapping("/propiedades/registrar")
+    public String guardarNuevaPropiedad(Propiedad propiedad, Model model) {
+        try {
+            propiedadService.guardar(propiedad);
+            return "redirect:/propiedades/buscar";
+        } catch (RuntimeException e) {
+            if (propiedad.getPropietario() == null) {
+                propiedad.setPropietario(new Persona());
+            }
+
+            cargarDatosFormulario(model, propiedad);
+            model.addAttribute("error", e.getMessage());
+
+            return "propiedadesRegistrar";
+        }
+    }
+
     @GetMapping("/propiedades/editar/{id}")
     public String editarPropiedad(@PathVariable Long id, Model model) {
-        model.addAttribute("propiedad", propiedadService.buscarPorId(id));
-        model.addAttribute("personas", personaService.listarNoEliminadas());
-        model.addAttribute("tiposPropiedad", TipoPropiedad.values());
-        model.addAttribute("estadosPropiedad", EstadoPropiedad.values());
+        try {
+            Propiedad propiedad = propiedadService.buscarPorId(id);
 
-        return "propiedadesEditar";
+            if (propiedad.getPropietario() == null) {
+                propiedad.setPropietario(new Persona());
+            }
+
+            cargarDatosFormulario(model, propiedad);
+
+            return "propiedadesEditar";
+
+        } catch (RuntimeException e) {
+            model.addAttribute("propiedades", propiedadService.listarConFiltros(null, null, null, null));
+            model.addAttribute("tiposPropiedad", TipoPropiedad.values());
+            model.addAttribute("estadosPropiedad", EstadoPropiedad.values());
+            model.addAttribute("error", e.getMessage());
+
+            return "propiedadesBuscar";
+        }
     }
 
     @PostMapping("/propiedades/guardar/{id}")
@@ -59,10 +103,11 @@ public class PropiedadWebController {
             propiedadService.modificar(id, propiedad);
             return "redirect:/propiedades/buscar";
         } catch (RuntimeException e) {
-            model.addAttribute("propiedad", propiedad);
-            model.addAttribute("personas", personaService.listarNoEliminadas());
-            model.addAttribute("tiposPropiedad", TipoPropiedad.values());
-            model.addAttribute("estadosPropiedad", EstadoPropiedad.values());
+            if (propiedad.getPropietario() == null) {
+                propiedad.setPropietario(new Persona());
+            }
+
+            cargarDatosFormulario(model, propiedad);
             model.addAttribute("error", e.getMessage());
 
             return "propiedadesEditar";
@@ -82,5 +127,14 @@ public class PropiedadWebController {
 
             return "propiedadesBuscar";
         }
+    }
+
+    private void cargarDatosFormulario(Model model, Propiedad propiedad) {
+        List<Persona> personas = personaService.listarNoEliminadas();
+
+        model.addAttribute("propiedad", propiedad);
+        model.addAttribute("personas", personas);
+        model.addAttribute("tiposPropiedad", TipoPropiedad.values());
+        model.addAttribute("estadosPropiedad", EstadoPropiedad.values());
     }
 }
