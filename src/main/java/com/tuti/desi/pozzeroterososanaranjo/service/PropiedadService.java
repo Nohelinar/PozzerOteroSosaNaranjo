@@ -64,7 +64,18 @@ public class PropiedadService {
 
         return propiedadesFiltradas;
     }
+    
+    public Propiedad buscarPorId(Long id) {
 
+    Propiedad propiedad = propiedadRepository.findById(id)
+        .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
+
+    if (Boolean.TRUE.equals(propiedad.getEliminada())) {
+        throw new RuntimeException("La propiedad indicada esta eliminada.");
+    }
+
+    return propiedad;
+}
     @Transactional
     public Propiedad guardar(Propiedad propiedad) {
 

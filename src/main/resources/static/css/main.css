@@ -1,0 +1,86 @@
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 30px;
+}
+
+h1 {
+    color: #1f4e79;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+label {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+input, select {
+    margin-right: 15px;
+    padding: 5px;
+}
+
+button, a.boton {
+    display: inline-block;
+    padding: 6px 10px;
+    margin-right: 5px;
+    text-decoration: none;
+    border: 1px solid #555;
+    background-color: #eeeeee;
+    color: black;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: normal;
+}
+
+button:hover, a.boton:hover {
+    background-color: #dddddd;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 15px;
+}
+
+th {
+    background-color: #1f4e79;
+    color: white;
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+td {
+    padding: 8px;
+    border: 1px solid #ccc;
+}
+
+.mensaje-error {
+    color: red;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.acciones {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.acciones form {
+    margin: 0;
+}
+
+.acciones button,
+.acciones a.boton {
+    height: auto;
+}
+
+textarea {
+    padding: 5px;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}

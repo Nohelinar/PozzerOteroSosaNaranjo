@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Propiedad</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<h1>Editar Propiedad</h1>
+
+<div th:if="${error}" class="mensaje-error">
+    <span th:text="${error}"></span>
+</div>
+
+<form action="#" th:action="@{/propiedades/guardar/{id}(id=${propiedad.id})}" method="post" th:object="${propiedad}">
+
+    <p>
+        <label>ID:</label>
+        <span th:text="${propiedad.id}"></span>
+    </p>
+
+    <p>
+        <label>Dirección:</label>
+        <input type="text" th:field="*{direccion}" required>
+    </p>
+
+    <p>
+        <label>Ciudad:</label>
+        <input type="text" th:field="*{ciudad}" required>
+    </p>
+
+    <p>
+        <label>Tipo de propiedad:</label>
+        <select th:field="*{tipoPropiedad}" required>
+            <option th:each="tipo : ${tiposPropiedad}"
+                    th:value="${tipo}"
+                    th:text="${tipo}">
+            </option>
+        </select>
+    </p>
+
+    <p>
+        <label>Cantidad de ambientes:</label>
+        <input type="number" th:field="*{cantidadAmbientes}" min="1" required>
+    </p>
+
+    <p>
+        <label>Metros cuadrados:</label>
+        <input type="number" step="0.01" th:field="*{metrosCuadrados}" min="0.01" required>
+    </p>
+
+    <p>
+    <label>Descripción:</label><br>
+    <textarea th:field="*{descripcion}" rows="4" cols="60" required></textarea>
+    </p>
+
+    <p>
+        <label>Estado:</label>
+        <select th:field="*{estadoPropiedad}" required>
+            <option th:each="estado : ${estadosPropiedad}"
+                    th:value="${estado}"
+                    th:text="${estado}">
+            </option>
+        </select>
+    </p>
+
+    <p>
+        <label>Propietario:</label>
+        <select th:field="*{propietario.id}" required>
+            <option th:each="persona : ${personas}"
+                    th:value="${persona.id}"
+                    th:text="${persona.nombre + ' ' + persona.apellido}">
+            </option>
+        </select>
+    </p>
+
+    <button type="submit">Guardar</button>
+    <a href="/propiedades/buscar" th:href="@{/propiedades/buscar}" class="boton">Volver</a>
+
+</form>
+
+</body>
+</html>
