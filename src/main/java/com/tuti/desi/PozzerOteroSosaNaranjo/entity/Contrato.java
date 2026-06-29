@@ -31,7 +31,8 @@ public class Contrato {
 	@ManyToOne
 	@JoinColumn(name = "inquilino_id")
 	private Persona inquilino;
-
+	
+	@org.springframework.format.annotation.DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate fechaInicio;
 
 	private Integer duracionMeses;

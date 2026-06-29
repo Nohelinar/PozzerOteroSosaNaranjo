@@ -2,123 +2,123 @@
 package com.tuti.desi.PozzerOteroSosaNaranjo.entity;
 
 import jakarta.persistence.Entity;
-//import jakarta.persistence.EnumType;
-//import jakarta.persistence.Enumerated;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
-//import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
-//import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
+import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoPropiedad;
+import com.tuti.desi.PozzerOteroSosaNaranjo.enums.TipoPropiedad;
 
 @Entity
 public class Propiedad {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private String direccion;
+    private String direccion;
 
-	private String ciudad;
+    private String ciudad;
 
-	// @Enumerated(EnumType.STRING)
-	// private TipoPropiedad tipoPropiedad;
+    @Enumerated(EnumType.STRING)
+    private TipoPropiedad tipoPropiedad;
 
-	private Integer cantidadAmbientes;
+    private Integer cantidadAmbientes;
 
-	private Double metrosCuadrados;
+    private Double metrosCuadrados;
 
-	private String descripcion;
+    private String descripcion;
 
-	// @Enumerated(EnumType.STRING)
-	// private EstadoPropiedad estadoPropiedad;
+    @Enumerated(EnumType.STRING)
+    private EstadoPropiedad estadoPropiedad;
 
-	private boolean eliminada;
+    private Boolean eliminada;
 
-	@ManyToOne
-	@JoinColumn(name = "propietario_id")
-	private Persona propietario;
+    @ManyToOne
+    @JoinColumn(name = "propietario_id")
+    private Persona propietario;
 
-	public Long getId() {
-		return id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getDireccion() {
-		return direccion;
-	}
+    public String getDireccion() {
+        return direccion;
+    }
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
-	}
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
 
-	public String getCiudad() {
-		return ciudad;
-	}
+    public String getCiudad() {
+        return ciudad;
+    }
 
-	public void setCiudad(String ciudad) {
-		this.ciudad = ciudad;
-	}
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
 
-	// public TipoPropiedad getTipoPropiedad() {
-	// return tipoPropiedad;
-	// }
+    public TipoPropiedad getTipoPropiedad() {
+        return tipoPropiedad;
+    }
 
-	// public void setTipoPropiedad(TipoPropiedad tipoPropiedad) {
-	// this.tipoPropiedad = tipoPropiedad;
-	// }
+    public void setTipoPropiedad(TipoPropiedad tipoPropiedad) {
+        this.tipoPropiedad = tipoPropiedad;
+    }
 
-	public Integer getCantidadAmbientes() {
-		return cantidadAmbientes;
-	}
+    public Integer getCantidadAmbientes() {
+        return cantidadAmbientes;
+    }
 
-	public void setCantidadAmbientes(Integer cantidadAmbientes) {
-		this.cantidadAmbientes = cantidadAmbientes;
-	}
+    public void setCantidadAmbientes(Integer cantidadAmbientes) {
+        this.cantidadAmbientes = cantidadAmbientes;
+    }
 
-	public Double getMetrosCuadrados() {
-		return metrosCuadrados;
-	}
+    public Double getMetrosCuadrados() {
+        return metrosCuadrados;
+    }
 
-	public void setMetrosCuadrados(Double metrosCuadrados) {
-		this.metrosCuadrados = metrosCuadrados;
-	}
+    public void setMetrosCuadrados(Double metrosCuadrados) {
+        this.metrosCuadrados = metrosCuadrados;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	// public EstadoPropiedad getEstadoPropiedad() {
-	// return estadoPropiedad;
-	// }
+    public EstadoPropiedad getEstadoPropiedad() {
+        return estadoPropiedad;
+    }
 
-	// public void setEstadoPropiedad(EstadoPropiedad estadoPropiedad) {
-	// this.estadoPropiedad = estadoPropiedad;
-	// }
+    public void setEstadoPropiedad(EstadoPropiedad estadoPropiedad) {
+        this.estadoPropiedad = estadoPropiedad;
+    }
 
-	public boolean isEliminada() {
-		return eliminada;
-	}
+    public Boolean getEliminada() {
+        return eliminada;
+    }
 
-	public void setEliminada(boolean eliminada) {
-		this.eliminada = eliminada;
-	}
+    public void setEliminada(Boolean eliminada) {
+        this.eliminada = eliminada;
+    }
 
-	public Persona getPropietario() {
-		return propietario;
-	}
+    public Persona getPropietario() {
+        return propietario;
+    }
 
-	public void setPropietario(Persona propietario) {
-		this.propietario = propietario;
-	}
+    public void setPropietario(Persona propietario) {
+        this.propietario = propietario;
+    }
 }

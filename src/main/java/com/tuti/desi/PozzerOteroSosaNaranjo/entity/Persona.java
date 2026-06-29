@@ -43,7 +43,7 @@ public class Persona {
         this.apellido = apellido;
     }
 
-    public Boolean isEliminada() {
+    public Boolean getEliminada() {
         return eliminada;
     }
 

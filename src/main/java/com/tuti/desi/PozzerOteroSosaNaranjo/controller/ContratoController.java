@@ -32,6 +32,13 @@ public class ContratoController {
 				fechaHasta);
 
 		model.addAttribute("contratos", listadoContratos);
+		model.addAttribute("estado", estado);
+		model.addAttribute("propiedades", contratoService.encontrarPropiedades());
+		model.addAttribute("personas", contratoService.encontrarPersonas());
+		model.addAttribute("propiedadId", propiedadId);
+		model.addAttribute("inquilinoId", inquilinoId);
+		model.addAttribute("fechaDesde", fechaDesde);
+		model.addAttribute("fechaHasta", fechaHasta);
 
 		return "contrato/listado";
 	}
@@ -40,6 +47,8 @@ public class ContratoController {
 	public String mostrarAltaContrato(Model model) {
 
 		model.addAttribute("contrato", new Contrato());
+		model.addAttribute("propiedades", contratoService.encontrarPropiedades());
+		model.addAttribute("personas", contratoService.encontrarPersonas());
 
 		return "contrato/alta";
 	}
@@ -54,6 +63,9 @@ public class ContratoController {
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("contrato", contrato);
+			model.addAttribute("propiedades", contratoService.encontrarPropiedades());
+			model.addAttribute("personas", contratoService.encontrarPersonas());
+
 			return "contrato/alta";
 		}
 	}
@@ -71,6 +83,7 @@ public class ContratoController {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("id", id);
 			model.addAttribute("contratos", listadoContratos);
+
 			return "contrato/listado";
 
 		}
@@ -81,19 +94,24 @@ public class ContratoController {
 
 		Contrato contratoAEditar = contratoService.buscarPorId(id);
 		model.addAttribute("contrato", contratoAEditar);
+		model.addAttribute("propiedades", contratoService.encontrarPropiedades());
+		model.addAttribute("personas", contratoService.encontrarPersonas());
+
 		return "contrato/editar";
 	}
-	
+
 	@PostMapping("/contratos/editar/{id}")
 	public String guardarEdicion(@PathVariable Long id, @ModelAttribute Contrato contrato, Model model) {
-		
+
 		try {
 			contratoService.modificarContrato(id, contrato);
 			return "redirect:/contratos/listado";
-			
-		} catch(RuntimeException e) {
+
+		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("contrato", contrato);
+			model.addAttribute("propiedades", contratoService.encontrarPropiedades());
+			model.addAttribute("personas", contratoService.encontrarPersonas());
 			return "contrato/editar";
 		}
 	}

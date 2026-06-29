@@ -1,5 +1,6 @@
 package com.tuti.desi.PozzerOteroSosaNaranjo.service;
 
+import com.tuti.desi.PozzerOteroSosaNaranjo.repository.PersonaRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,9 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Contrato;
 import com.tuti.desi.PozzerOteroSosaNaranjo.entity.HistorialEstadoContrato;
+import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Persona;
+import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Propiedad;
 import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato;
+import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoPropiedad;
 import com.tuti.desi.PozzerOteroSosaNaranjo.repository.ContratoRepository;
 import com.tuti.desi.PozzerOteroSosaNaranjo.repository.HistorialEstadoContratoRepository;
+import com.tuti.desi.PozzerOteroSosaNaranjo.repository.PropiedadRepository;
 
 @Service
 public class ContratoService {
@@ -23,12 +28,13 @@ public class ContratoService {
 	@Autowired
 	private HistorialEstadoContratoRepository historialEstadoContratoRepository;
 
-	public Contrato altaContrato(Contrato contrato) {
+	@Autowired
+	private PropiedadRepository propiedadRepository;
 
-		// FALTA: No se podrá crear un contrato activo si la propiedad no está
-		// disponible.
-		// FALTA: Al activar un contrato, la propiedad asociada deberá pasar a estado
-		// "alquilada".
+	@Autowired
+	private PersonaRepository personaRepository;
+
+	public Contrato altaContrato(Contrato contrato) {
 
 		validarContrato(contrato);
 
@@ -38,6 +44,16 @@ public class ContratoService {
 
 		if (!contratos.isEmpty()) {
 			throw new RuntimeException("Ya existe un contrato activo para esta propiedad.");
+		}
+
+		if (contrato.getEstado() == EstadoContrato.ACTIVO
+				&& contrato.getPropiedad().getEstadoPropiedad() != EstadoPropiedad.DISPONIBLE) {
+			throw new RuntimeException("No se puede crear un contrato activo, la propiedad no esta disponible.");
+		}
+
+		if (contrato.getEstado() == EstadoContrato.ACTIVO) {
+			contrato.getPropiedad().setEstadoPropiedad(EstadoPropiedad.ALQUILADA);
+			propiedadRepository.save(contrato.getPropiedad());
 		}
 
 		Contrato contratoGuardado = contratoRepository.save(contrato);
@@ -100,6 +116,19 @@ public class ContratoService {
 					"No se puede actualizar el estado del contrato de borrador o finalizado a rescindido.");
 		}
 
+		if (contratoModificado.getEstado() == EstadoContrato.FINALIZADO
+				|| contratoModificado.getEstado() == EstadoContrato.RESCINDIDO) {
+			contratoExistente.getPropiedad().setEstadoPropiedad(EstadoPropiedad.DISPONIBLE);
+			propiedadRepository.save(contratoExistente.getPropiedad());
+		}
+
+		if (contratoExistente.getEstado() != EstadoContrato.ACTIVO) {
+			if (contratoModificado.getEstado() == EstadoContrato.ACTIVO
+					&& contratoModificado.getPropiedad().getEstadoPropiedad() != EstadoPropiedad.DISPONIBLE) {
+				throw new RuntimeException("No se puede activar el contrato, la propiedad no esta disponible.");
+			}
+		}
+
 		if (contratoModificado.getEstado() == EstadoContrato.ACTIVO) {
 
 			Long propiedadId = contratoExistente.getPropiedad().getId();
@@ -112,6 +141,8 @@ public class ContratoService {
 					throw new RuntimeException("Ya existe un contrato activo para esta propiedad.");
 				}
 			}
+			contratoModificado.getPropiedad().setEstadoPropiedad(EstadoPropiedad.ALQUILADA);
+			propiedadRepository.save(contratoModificado.getPropiedad());
 		}
 
 		contratoExistente.setPropiedad(contratoModificado.getPropiedad());
@@ -210,5 +241,13 @@ public class ContratoService {
 		historial.setFechaHora(LocalDateTime.now());
 
 		historialEstadoContratoRepository.save(historial);
+	}
+
+	public List<Propiedad> encontrarPropiedades() {
+		return propiedadRepository.findByEliminadaFalse();
+	}
+
+	public List<Persona> encontrarPersonas() {
+		return personaRepository.findByEliminadaFalse();
 	}
 }
