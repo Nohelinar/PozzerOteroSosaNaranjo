@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Personas
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="p-5">
+    <div class="container">
+        <h1 class="mb-4">
+            Personas
+        </h1>
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div th:if="${warning}" class="alert alert-warning" th:text="${warning}"></div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="card-title">
+                    Búsqueda
+                </h5>
+
+                <form th:action="@{/personasBuscar}" th:object="${formBean}" method="post">
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+                            <label for="apellido" class="form-label">
+                                Apellido
+                            </label>
+                            <input type="text" class="form-control" th:field="*{apellido}"
+                                placeholder="Buscar por apellido" id="apellido" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="nombre" class="form-label">
+                                Nombre
+                            </label>
+                            <input type="text" class="form-control" th:field="*{nombre}" placeholder="Buscar por nombre"
+                                id="nombre" />
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="email" class="form-label">
+                                Email
+                            </label>
+                            <input type="text" class="form-control" th:field="*{email}" placeholder="Buscar por email"
+                                id="email" />
+                        </div>
+
+                        <div class="col-12 d-flex justify-content-end gap-0">
+                            <button type="submit" name="action" value="actionBuscar" class="btn btn-primary">
+                                <i class="fas fa-search"></i> Buscar
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Tabla de resultados -->
+        <div class="table-responsive">
+            <table class="table table-bordered border-Light table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Apellido</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Email</th>
+                        <th class="text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${resultados == null or resultados.isEmpty()}">
+                        <td colspan="6" class="text-center text-muted py-4">
+                            <i class="fas fa-info-circle"></i> Los resultados se mostrarán aquí
+                        </td>
+                    </tr>
+                    <tr th:each="persona : ${resultados}">
+                        <td th:text="${persona.id}"></td>
+                        <td th:text="${persona.apellido}"></td>
+                        <td th:text="${persona.nombre}"></td>
+                        <td th:text="${persona.telefono}"></td>
+                        <td th:text="${persona.email}"></td>
+                        <td class="text-center">
+                            <a th:href="@{/personasEditar/{id}(id=${persona.id})}" class="btn btn-primary btn-sm me-1"
+                                title="Editar">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <form th:action="@{/personasEditar/delete/{id}(id=${persona.id})}" method="post"
+                                style="display:inline">
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('¿Está seguro de eliminar esta persona?')" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="mt-4 d-flex justify-content-between">
+            <a th:href="@{/}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Ir a Inicio
+            </a>
+            <a th:href="@{/personasEditar}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Agregar Nueva Persona
+            </a>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
