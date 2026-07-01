@@ -1,0 +1,47 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Editar Contrato</title>
+</head>
+
+<body>
+	<p th:if="${error}" th:text="${error}"></p>
+	<form th:action="@{/contratos/editar/{id}(id=${contrato.id})}" th:object="${contrato}" method="post">
+		<label>Descripción:</label>
+		<input type="text" th:field="*{descripcion}" /><br />
+
+		<label>Fecha de inicio:</label>
+		<input type="date" th:field="*{fechaInicio}" /><br />
+
+		<label>Duración (meses):</label>
+		<input type="number" th:field="*{duracionMeses}" /><br />
+
+		<label>Importe mensual:</label>
+		<input type="number" th:field="*{importeMensual}" step="0.01" /><br />
+
+		<label>Día de vencimiento:</label>
+		<input type="number" th:field="*{diaVencimientoMensual}" /><br />
+
+		<label>Propiedad:</label>
+		<select th:field="*{propiedad}">
+			<option th:each="p : ${propiedades}" th:value="${p.id}" th:text="${p.direccion}"></option>
+		</select> <br />
+
+		<label>Inquilino:</label>
+		<select th:field="*{inquilino}">
+			<option th:each="p : ${personas}" th:value="${p.id}" th:text="${p.nombre}">
+			</option>
+		</select> <br />
+
+		<label>Estado:</label>
+		<select th:field="*{estado}">
+			<option th:each="e : ${T(com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato).values()}"
+				th:value="${e}" th:text="${e}"></option>
+		</select> <br />
+
+		<button type="submit">Guardar</button>
+	</form>
+
+</body>
+
+</html>
