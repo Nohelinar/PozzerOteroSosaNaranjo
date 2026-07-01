@@ -1,9 +1,9 @@
-package com.tuti.desi.PozzerOteroSosaNaranjo.entity;
+package com.tuti.desi.pozzeroterososanaranjo.entity;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato;
 
 import java.math.BigDecimal;
 

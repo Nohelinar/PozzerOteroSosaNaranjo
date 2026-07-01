@@ -1,13 +1,13 @@
 
-package com.tuti.desi.PozzerOteroSosaNaranjo.repository;
+package com.tuti.desi.pozzeroterososanaranjo.repository;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Contrato;
-import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato;
+import com.tuti.desi.pozzeroterososanaranjo.entity.Contrato;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato;
 
 public interface ContratoRepository extends JpaRepository<Contrato, Long> {
 

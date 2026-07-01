@@ -1,4 +1,4 @@
-package com.tuti.desi.PozzerOteroSosaNaranjo.enums;
+package com.tuti.desi.pozzeroterososanaranjo.enums;
 
 public enum EstadoContrato {
 	BORRADOR, ACTIVO, FINALIZADO, RESCINDIDO

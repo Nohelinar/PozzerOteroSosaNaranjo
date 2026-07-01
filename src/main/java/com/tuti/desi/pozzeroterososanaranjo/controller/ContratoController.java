@@ -1,4 +1,4 @@
-package com.tuti.desi.PozzerOteroSosaNaranjo.controller;
+package com.tuti.desi.pozzeroterososanaranjo.controller;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Contrato;
-import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato;
-import com.tuti.desi.PozzerOteroSosaNaranjo.service.ContratoService;
+import com.tuti.desi.pozzeroterososanaranjo.entity.Contrato;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato;
+import com.tuti.desi.pozzeroterososanaranjo.service.ContratoService;
 
 @Controller
 public class ContratoController {

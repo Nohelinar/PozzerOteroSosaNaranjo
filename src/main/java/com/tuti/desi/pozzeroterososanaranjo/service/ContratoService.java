@@ -1,6 +1,6 @@
-package com.tuti.desi.PozzerOteroSosaNaranjo.service;
+package com.tuti.desi.pozzeroterososanaranjo.service;
 
-import com.tuti.desi.PozzerOteroSosaNaranjo.repository.PersonaRepository;
+import com.tuti.desi.pozzeroterososanaranjo.repository.PersonaRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,15 +9,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Contrato;
-import com.tuti.desi.PozzerOteroSosaNaranjo.entity.HistorialEstadoContrato;
-import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Persona;
-import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Propiedad;
-import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato;
-import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoPropiedad;
-import com.tuti.desi.PozzerOteroSosaNaranjo.repository.ContratoRepository;
-import com.tuti.desi.PozzerOteroSosaNaranjo.repository.HistorialEstadoContratoRepository;
-import com.tuti.desi.PozzerOteroSosaNaranjo.repository.PropiedadRepository;
+import com.tuti.desi.pozzeroterososanaranjo.entity.Contrato;
+import com.tuti.desi.pozzeroterososanaranjo.entity.HistorialEstadoContrato;
+import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
+import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
+import com.tuti.desi.pozzeroterososanaranjo.repository.ContratoRepository;
+import com.tuti.desi.pozzeroterososanaranjo.repository.HistorialEstadoContratoRepository;
+import com.tuti.desi.pozzeroterososanaranjo.repository.PropiedadRepository;
 
 @Service
 public class ContratoService {

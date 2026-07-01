@@ -16,8 +16,8 @@
 <form th:action="@{/contratos/listado}" method="get">
 	<select name="estado">
 		<option value="">Todos</option>
-		<option th:each="e : ${T(com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato).values()}" th:value="${e}"
-			th:text="${e}" th:selected="${e == estado}"></option>
+		<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato).values()}" th:value="${e}"
+				th:text="${e}" th:selected="${e == estado}"></option>
 	</select>
 	<select name="propiedadId">
 		<option value="" th:selected="${propiedadId == null}">Todas</option>

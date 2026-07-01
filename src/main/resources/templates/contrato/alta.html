@@ -35,7 +35,7 @@
 
 		<label>Estado:</label>
 		<select th:field="*{estado}">
-			<option th:each="e : ${T(com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato).values()}"
+			<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato).values()}"
 				th:value="${e}" th:text="${e}"></option>
 		</select> <br />
 

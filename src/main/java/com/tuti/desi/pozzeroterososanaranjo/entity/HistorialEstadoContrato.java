@@ -1,8 +1,8 @@
-package com.tuti.desi.PozzerOteroSosaNaranjo.entity;
+package com.tuti.desi.pozzeroterososanaranjo.entity;
 
 import java.time.LocalDateTime;
 
-import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
