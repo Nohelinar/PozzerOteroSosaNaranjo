@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tuti.desi.PozzerOteroSosaNaranjo.entity.HistorialEstadoPropiedad;
 import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Persona;
 import com.tuti.desi.PozzerOteroSosaNaranjo.entity.Propiedad;
+import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoContrato;
 import com.tuti.desi.PozzerOteroSosaNaranjo.enums.EstadoPropiedad;
 import com.tuti.desi.PozzerOteroSosaNaranjo.enums.TipoPropiedad;
+import com.tuti.desi.PozzerOteroSosaNaranjo.repository.ContratoRepository;
 import com.tuti.desi.PozzerOteroSosaNaranjo.repository.HistorialEstadoPropiedadRepository;
 import com.tuti.desi.PozzerOteroSosaNaranjo.repository.PersonaRepository;
 import com.tuti.desi.PozzerOteroSosaNaranjo.repository.PropiedadRepository;
@@ -29,6 +31,9 @@ public class PropiedadService {
 
     @Autowired
     private HistorialEstadoPropiedadRepository historialEstadoPropiedadRepository;
+
+    @Autowired
+    private ContratoRepository contratoRepository;
 
     public List<Propiedad> listarTodas() {
         return propiedadRepository.findByEliminadaFalse();
@@ -64,18 +69,19 @@ public class PropiedadService {
 
         return propiedadesFiltradas;
     }
-    
+
     public Propiedad buscarPorId(Long id) {
 
-    Propiedad propiedad = propiedadRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
+        Propiedad propiedad = propiedadRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
 
-    if (Boolean.TRUE.equals(propiedad.getEliminada())) {
-        throw new RuntimeException("La propiedad indicada esta eliminada.");
+        if (Boolean.TRUE.equals(propiedad.getEliminada())) {
+            throw new RuntimeException("La propiedad indicada esta eliminada.");
+        }
+
+        return propiedad;
     }
 
-    return propiedad;
-}
     @Transactional
     public Propiedad guardar(Propiedad propiedad) {
 
@@ -137,6 +143,12 @@ public class PropiedadService {
             throw new RuntimeException("Ya existe otra propiedad activa con la misma direccion y ciudad.");
         }
 
+        if (tieneContratoActivo(id) &&
+            (propiedadActualizada.getEstadoPropiedad() == EstadoPropiedad.DISPONIBLE ||
+             propiedadActualizada.getEstadoPropiedad() == EstadoPropiedad.INACTIVA)) {
+            throw new RuntimeException("No se puede cambiar la propiedad a disponible o inactiva porque tiene un contrato activo.");
+        }
+
         EstadoPropiedad estadoAnterior = propiedadExistente.getEstadoPropiedad();
 
         propiedadExistente.setDireccion(propiedadActualizada.getDireccion());
@@ -165,6 +177,10 @@ public class PropiedadService {
 
         if (Boolean.TRUE.equals(propiedad.getEliminada())) {
             throw new RuntimeException("La propiedad ya se encuentra eliminada.");
+        }
+
+        if (tieneContratoActivo(id)) {
+            throw new RuntimeException("No se puede eliminar la propiedad porque tiene un contrato activo.");
         }
 
         propiedad.setEliminada(true);
@@ -222,6 +238,13 @@ public class PropiedadService {
         historial.setFechaCambio(LocalDateTime.now());
 
         historialEstadoPropiedadRepository.save(historial);
+    }
+
+    private boolean tieneContratoActivo(Long propiedadId) {
+        return contratoRepository.existsByPropiedadIdAndEstadoAndEliminadoFalse(
+            propiedadId,
+            EstadoContrato.ACTIVO
+        );
     }
 
     private boolean contieneTexto(String textoCompleto, String textoBuscado) {
