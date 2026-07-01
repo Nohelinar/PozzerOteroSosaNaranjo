@@ -6,19 +6,13 @@
 
 + Alta, Baja (o Eliminación), Modificación y Consulta
 
-### Integrantes del Equipo
+### Integrantes
 
-1. **Noheli Naranjo Vega**39894892
-2. **Ignacio Otero** 47029270
-3. **Jose Nicolas Pozzer** 42579253
-4. **Ignacio Sosa** 28079719
+1. **Noheli Naranjo Vega**
+2. **Ignacio Otero**
+3. **Jose Nicolas Pozzer**
+4. **Ignacio Sosa**
 
----
+### Url
 
-<!-- _class: with-DESI-TP-3 -->
-
-### Proyecto
-
-+ **Url:** [PozzerOteroSosaNaranjo](https://github.com/Nohelinar/PozzerOteroSosaNaranjo.git)
-
-> En este repositorio se encuentra disponible el código fuente, la documentación y el historial de cambios del proyecto.
+Visita: [PozzerOteroSosaNaranjo](https://github.com/Nohelinar/PozzerOteroSosaNaranjo.git)
