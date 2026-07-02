@@ -29,7 +29,9 @@
 		<p>
 			<label>Contrato:</label>
 			<span th:text="${factura.contrato.propiedad.direccion + ' - ' + factura.contrato.inquilino.nombre}"></span>
-			<!-- El contrato asociado a una factura ya creada es de solo lectura -->
+			<!-- El contrato asociado a una factura ya creada es de solo lectura visualmente, -->
+			<!-- pero su id debe viajar igual en el formulario para que el binding no lo pierda -->
+			<input type="hidden" name="contrato" th:value="${factura.contrato.id}">
 		</p>
 
 		<p>

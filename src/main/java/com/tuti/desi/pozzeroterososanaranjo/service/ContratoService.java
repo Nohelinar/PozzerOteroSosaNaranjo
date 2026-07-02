@@ -40,18 +40,19 @@ public class ContratoService {
 
 		Long propiedadId = contrato.getPropiedad().getId();
 
-		List<Contrato> contratos = contratoRepository.findByPropiedadIdAndEstado(propiedadId, EstadoContrato.ACTIVO);
-
-		if (!contratos.isEmpty()) {
-			throw new RuntimeException("Ya existe un contrato activo para esta propiedad.");
-		}
-
-		if (contrato.getEstado() == EstadoContrato.ACTIVO
-				&& contrato.getPropiedad().getEstadoPropiedad() != EstadoPropiedad.DISPONIBLE) {
-			throw new RuntimeException("No se puede crear un contrato activo, la propiedad no esta disponible.");
-		}
-
 		if (contrato.getEstado() == EstadoContrato.ACTIVO) {
+
+			List<Contrato> contratosActivos = contratoRepository.findByPropiedadIdAndEstado(propiedadId,
+					EstadoContrato.ACTIVO);
+
+			if (!contratosActivos.isEmpty()) {
+				throw new RuntimeException("Ya existe un contrato activo para esta propiedad.");
+			}
+
+			if (contrato.getPropiedad().getEstadoPropiedad() != EstadoPropiedad.DISPONIBLE) {
+				throw new RuntimeException("No se puede crear un contrato activo, la propiedad no esta disponible.");
+			}
+
 			contrato.getPropiedad().setEstadoPropiedad(EstadoPropiedad.ALQUILADA);
 			propiedadRepository.save(contrato.getPropiedad());
 		}
@@ -163,25 +164,37 @@ public class ContratoService {
 	}
 
 	public List<Contrato> listarContratos(Long propiedadId, Long inquilinoId, EstadoContrato estado,
-			LocalDate fechaDesde, LocalDate fechaHasta) {
+										  LocalDate fechaDesde, LocalDate fechaHasta) {
 
-		if (propiedadId != null) {
-			return contratoRepository.findByPropiedadIdAndEliminadoFalse(propiedadId);
+		List<Contrato> contratos = contratoRepository.findByEliminadoFalse();
+		List<Contrato> contratosFiltrados = new java.util.ArrayList<>();
+
+		for (Contrato contrato : contratos) {
+
+			boolean cumplePropiedad = propiedadId == null
+					|| (contrato.getPropiedad() != null && propiedadId.equals(contrato.getPropiedad().getId()));
+
+			boolean cumpleInquilino = inquilinoId == null
+					|| (contrato.getInquilino() != null && inquilinoId.equals(contrato.getInquilino().getId()));
+
+			boolean cumpleEstado = estado == null || estado.equals(contrato.getEstado());
+
+			boolean cumpleFecha = true;
+			if (fechaDesde != null) {
+				cumpleFecha = cumpleFecha && contrato.getFechaInicio() != null
+						&& !contrato.getFechaInicio().isBefore(fechaDesde);
+			}
+			if (fechaHasta != null) {
+				cumpleFecha = cumpleFecha && contrato.getFechaInicio() != null
+						&& !contrato.getFechaInicio().isAfter(fechaHasta);
+			}
+
+			if (cumplePropiedad && cumpleInquilino && cumpleEstado && cumpleFecha) {
+				contratosFiltrados.add(contrato);
+			}
 		}
 
-		if (inquilinoId != null) {
-			return contratoRepository.findByInquilinoIdAndEliminadoFalse(inquilinoId);
-		}
-
-		if (estado != null) {
-			return contratoRepository.findByEstadoAndEliminadoFalse(estado);
-		}
-
-		if (fechaDesde != null && fechaHasta != null) {
-			return contratoRepository.findByFechaInicioBetweenAndEliminadoFalse(fechaDesde, fechaHasta);
-		}
-
-		return contratoRepository.findByEliminadoFalse();
+		return contratosFiltrados;
 	}
 
 	public void validarContrato(Contrato contrato) {

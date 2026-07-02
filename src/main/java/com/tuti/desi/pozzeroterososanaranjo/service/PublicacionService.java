@@ -134,25 +134,39 @@ public class PublicacionService {
 	}
 
 	public List<Publicacion> listarPublicaciones(Long propiedadId, String ciudad, EstadoPublicacion estado,
-			BigDecimal precioDesde, BigDecimal precioHasta) {
+												 BigDecimal precioDesde, BigDecimal precioHasta) {
 
-		if (propiedadId != null) {
-			return publicacionRepository.findByPropiedadIdAndEliminadaFalse(propiedadId);
+		List<Publicacion> publicaciones = publicacionRepository.findByEliminadaFalse();
+		List<Publicacion> publicacionesFiltradas = new java.util.ArrayList<>();
+
+		for (Publicacion publicacion : publicaciones) {
+
+			boolean cumplePropiedad = propiedadId == null
+					|| (publicacion.getPropiedad() != null && propiedadId.equals(publicacion.getPropiedad().getId()));
+
+			boolean cumpleCiudad = ciudad == null || ciudad.trim().isEmpty()
+					|| (publicacion.getPropiedad() != null && publicacion.getPropiedad().getCiudad() != null
+					&& publicacion.getPropiedad().getCiudad().toLowerCase()
+					.contains(ciudad.toLowerCase().trim()));
+
+			boolean cumpleEstado = estado == null || estado.equals(publicacion.getEstado());
+
+			boolean cumplePrecio = true;
+			if (precioDesde != null) {
+				cumplePrecio = cumplePrecio && publicacion.getPrecioMensual() != null
+						&& publicacion.getPrecioMensual().compareTo(precioDesde) >= 0;
+			}
+			if (precioHasta != null) {
+				cumplePrecio = cumplePrecio && publicacion.getPrecioMensual() != null
+						&& publicacion.getPrecioMensual().compareTo(precioHasta) <= 0;
+			}
+
+			if (cumplePropiedad && cumpleCiudad && cumpleEstado && cumplePrecio) {
+				publicacionesFiltradas.add(publicacion);
+			}
 		}
 
-		if (ciudad != null && !ciudad.trim().isEmpty()) {
-			return publicacionRepository.findByPropiedadCiudadAndEliminadaFalse(ciudad);
-		}
-
-		if (estado != null) {
-			return publicacionRepository.findByEstadoAndEliminadaFalse(estado);
-		}
-
-		if (precioDesde != null && precioHasta != null) {
-			return publicacionRepository.findByPrecioMensualBetweenAndEliminadaFalse(precioDesde, precioHasta);
-		}
-
-		return publicacionRepository.findByEliminadaFalse();
+		return publicacionesFiltradas;
 	}
 
 	public Publicacion buscarPorId(Long id) {

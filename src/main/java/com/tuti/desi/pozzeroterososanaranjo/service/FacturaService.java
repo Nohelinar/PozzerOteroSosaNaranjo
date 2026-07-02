@@ -3,6 +3,7 @@ package com.tuti.desi.pozzeroterososanaranjo.service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,29 +136,42 @@ public class FacturaService {
 	}
 
 	public List<Factura> listarFacturas(Long contratoId, Long propiedadId, Long inquilinoId, EstadoFactura estado,
-			LocalDate vencimientoDesde, LocalDate vencimientoHasta) {
+										LocalDate vencimientoDesde, LocalDate vencimientoHasta) {
 
-		if (contratoId != null) {
-			return facturaRepository.findByContratoIdAndEliminadaFalse(contratoId);
+		List<Factura> facturas = facturaRepository.findByEliminadaFalse();
+		List<Factura> facturasFiltradas = new ArrayList<>();
+
+		for (Factura factura : facturas) {
+
+			boolean cumpleContrato = contratoId == null
+					|| (factura.getContrato() != null && contratoId.equals(factura.getContrato().getId()));
+
+			boolean cumplePropiedad = propiedadId == null
+					|| (factura.getContrato() != null && factura.getContrato().getPropiedad() != null
+					&& propiedadId.equals(factura.getContrato().getPropiedad().getId()));
+
+			boolean cumpleInquilino = inquilinoId == null
+					|| (factura.getContrato() != null && factura.getContrato().getInquilino() != null
+					&& inquilinoId.equals(factura.getContrato().getInquilino().getId()));
+
+			boolean cumpleEstado = estado == null || estado.equals(factura.getEstado());
+
+			boolean cumpleVencimiento = true;
+			if (vencimientoDesde != null) {
+				cumpleVencimiento = cumpleVencimiento && factura.getFechaVencimiento() != null
+						&& !factura.getFechaVencimiento().isBefore(vencimientoDesde);
+			}
+			if (vencimientoHasta != null) {
+				cumpleVencimiento = cumpleVencimiento && factura.getFechaVencimiento() != null
+						&& !factura.getFechaVencimiento().isAfter(vencimientoHasta);
+			}
+
+			if (cumpleContrato && cumplePropiedad && cumpleInquilino && cumpleEstado && cumpleVencimiento) {
+				facturasFiltradas.add(factura);
+			}
 		}
 
-		if (propiedadId != null) {
-			return facturaRepository.findByContratoPropiedadIdAndEliminadaFalse(propiedadId);
-		}
-
-		if (inquilinoId != null) {
-			return facturaRepository.findByContratoInquilinoIdAndEliminadaFalse(inquilinoId);
-		}
-
-		if (estado != null) {
-			return facturaRepository.findByEstadoAndEliminadaFalse(estado);
-		}
-
-		if (vencimientoDesde != null && vencimientoHasta != null) {
-			return facturaRepository.findByFechaVencimientoBetweenAndEliminadaFalse(vencimientoDesde, vencimientoHasta);
-		}
-
-		return facturaRepository.findByEliminadaFalse();
+		return facturasFiltradas;
 	}
 
 	public Factura buscarPorId(Long id) {

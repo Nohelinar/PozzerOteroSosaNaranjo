@@ -141,6 +141,13 @@ public class PropiedadService {
             throw new RuntimeException("Ya existe otra propiedad activa con la misma direccion y ciudad.");
         }
 
+        if ((propiedadActualizada.getEstadoPropiedad() == EstadoPropiedad.DISPONIBLE
+                || propiedadActualizada.getEstadoPropiedad() == EstadoPropiedad.INACTIVA)
+                && contratoRepository.existsByPropiedadIdAndEstadoAndEliminadoFalse(id, EstadoContrato.ACTIVO)) {
+            throw new RuntimeException(
+                    "No se puede cambiar el estado a disponible o inactiva porque la propiedad tiene un contrato activo. Finalice o rescinda el contrato primero.");
+        }
+
         EstadoPropiedad estadoAnterior = propiedadExistente.getEstadoPropiedad();
 
         propiedadExistente.setDireccion(propiedadActualizada.getDireccion());
