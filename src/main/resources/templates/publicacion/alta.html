@@ -1,0 +1,38 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Alta de Publicación</title>
+</head>
+
+<body>
+	<p th:if="${error}" th:text="${error}"></p>
+	<form th:action="@{/publicaciones/alta}" th:object="${publicacion}" method="post">
+		<label>Propiedad:</label>
+		<select th:field="*{propiedad}">
+			<option th:each="p : ${propiedades}" th:value="${p.id}" th:text="${p.direccion + ' - ' + p.ciudad}"></option>
+		</select> <br />
+
+		<label>Precio mensual:</label>
+		<input type="number" th:field="*{precioMensual}" step="0.01" /><br />
+
+		<label>Condiciones de alquiler:</label>
+		<textarea th:field="*{condicionesAlquiler}"></textarea><br />
+
+		<label>Descripción:</label>
+		<textarea th:field="*{descripcion}"></textarea><br />
+
+		<label>Fecha de publicación:</label>
+		<input type="date" th:field="*{fechaPublicacion}" /><br />
+
+		<label>Estado:</label>
+		<select th:field="*{estado}">
+			<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPublicacion).values()}"
+				th:value="${e}" th:text="${e}"></option>
+		</select> <br />
+
+		<button type="submit">Guardar</button>
+	</form>
+
+</body>
+
+</html>

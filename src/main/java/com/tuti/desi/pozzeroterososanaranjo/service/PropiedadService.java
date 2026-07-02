@@ -1,4 +1,3 @@
-
 package com.tuti.desi.pozzeroterososanaranjo.service;
 
 import java.time.LocalDateTime;
@@ -12,8 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.tuti.desi.pozzeroterososanaranjo.entity.HistorialEstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
+import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
+import com.tuti.desi.pozzeroterososanaranjo.repository.ContratoRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.HistorialEstadoPropiedadRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PersonaRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PropiedadRepository;
@@ -30,15 +31,18 @@ public class PropiedadService {
     @Autowired
     private HistorialEstadoPropiedadRepository historialEstadoPropiedadRepository;
 
+    @Autowired
+    private ContratoRepository contratoRepository;
+
     public List<Propiedad> listarTodas() {
         return propiedadRepository.findByEliminadaFalse();
     }
 
     public List<Propiedad> listarConFiltros(
-        String direccion,
-        String ciudad,
-        TipoPropiedad tipoPropiedad,
-        EstadoPropiedad estadoPropiedad
+            String direccion,
+            String ciudad,
+            TipoPropiedad tipoPropiedad,
+            EstadoPropiedad estadoPropiedad
     ) {
         List<Propiedad> propiedades = propiedadRepository.findByEliminadaFalse();
         List<Propiedad> propiedadesFiltradas = new ArrayList<>();
@@ -46,16 +50,16 @@ public class PropiedadService {
         for (Propiedad propiedad : propiedades) {
 
             boolean cumpleDireccion = direccion == null || direccion.trim().isEmpty()
-                || contieneTexto(propiedad.getDireccion(), direccion);
+                    || contieneTexto(propiedad.getDireccion(), direccion);
 
             boolean cumpleCiudad = ciudad == null || ciudad.trim().isEmpty()
-                || contieneTexto(propiedad.getCiudad(), ciudad);
+                    || contieneTexto(propiedad.getCiudad(), ciudad);
 
             boolean cumpleTipo = tipoPropiedad == null
-                || tipoPropiedad.equals(propiedad.getTipoPropiedad());
+                    || tipoPropiedad.equals(propiedad.getTipoPropiedad());
 
             boolean cumpleEstado = estadoPropiedad == null
-                || estadoPropiedad.equals(propiedad.getEstadoPropiedad());
+                    || estadoPropiedad.equals(propiedad.getEstadoPropiedad());
 
             if (cumpleDireccion && cumpleCiudad && cumpleTipo && cumpleEstado) {
                 propiedadesFiltradas.add(propiedad);
@@ -64,18 +68,18 @@ public class PropiedadService {
 
         return propiedadesFiltradas;
     }
-    
+
     public Propiedad buscarPorId(Long id) {
 
-    Propiedad propiedad = propiedadRepository.findById(id)
-        .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
+        Propiedad propiedad = propiedadRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
 
-    if (Boolean.TRUE.equals(propiedad.getEliminada())) {
-        throw new RuntimeException("La propiedad indicada esta eliminada.");
+        if (Boolean.TRUE.equals(propiedad.getEliminada())) {
+            throw new RuntimeException("La propiedad indicada esta eliminada.");
+        }
+
+        return propiedad;
     }
-
-    return propiedad;
-}
     @Transactional
     public Propiedad guardar(Propiedad propiedad) {
 
@@ -95,10 +99,10 @@ public class PropiedadService {
         }
 
         if (esNueva &&
-            propiedadRepository.existsByDireccionAndCiudadAndEliminadaFalse(
-                propiedad.getDireccion(),
-                propiedad.getCiudad()
-            )) {
+                propiedadRepository.existsByDireccionAndCiudadAndEliminadaFalse(
+                        propiedad.getDireccion(),
+                        propiedad.getCiudad()
+                )) {
             throw new RuntimeException("Ya existe una propiedad activa con la misma direccion y ciudad.");
         }
 
@@ -115,7 +119,7 @@ public class PropiedadService {
     public Propiedad modificar(Long id, Propiedad propiedadActualizada) {
 
         Propiedad propiedadExistente = propiedadRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
+                .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
 
         if (Boolean.TRUE.equals(propiedadExistente.getEliminada())) {
             throw new RuntimeException("No se puede modificar una propiedad eliminada.");
@@ -130,9 +134,9 @@ public class PropiedadService {
         Persona propietario = buscarYValidarPropietario(propiedadActualizada);
 
         if (propiedadRepository.existsByDireccionAndCiudadAndEliminadaFalseAndIdNot(
-            propiedadActualizada.getDireccion(),
-            propiedadActualizada.getCiudad(),
-            id
+                propiedadActualizada.getDireccion(),
+                propiedadActualizada.getCiudad(),
+                id
         )) {
             throw new RuntimeException("Ya existe otra propiedad activa con la misma direccion y ciudad.");
         }
@@ -161,10 +165,14 @@ public class PropiedadService {
     public void eliminarLogicamente(Long id) {
 
         Propiedad propiedad = propiedadRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
+                .orElseThrow(() -> new RuntimeException("La propiedad indicada no existe."));
 
         if (Boolean.TRUE.equals(propiedad.getEliminada())) {
             throw new RuntimeException("La propiedad ya se encuentra eliminada.");
+        }
+
+        if (contratoRepository.existsByPropiedadIdAndEstadoAndEliminadoFalse(id, EstadoContrato.ACTIVO)) {
+            throw new RuntimeException("No se puede eliminar la propiedad porque tiene un contrato activo vigente.");
         }
 
         propiedad.setEliminada(true);
@@ -205,7 +213,7 @@ public class PropiedadService {
     private Persona buscarYValidarPropietario(Propiedad propiedad) {
 
         Persona propietario = personaRepository.findById(propiedad.getPropietario().getId())
-            .orElseThrow(() -> new RuntimeException("El propietario indicado no existe."));
+                .orElseThrow(() -> new RuntimeException("El propietario indicado no existe."));
 
         if (Boolean.TRUE.equals(propietario.getEliminada())) {
             throw new RuntimeException("El propietario indicado esta eliminado.");

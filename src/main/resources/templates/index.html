@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inmobiliaria - Inicio</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+    <style>
+        .menu-inicio {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .seccion {
+            border: 1px solid #cccccc;
+            padding: 15px 20px;
+            width: 220px;
+        }
+        .seccion h2 {
+            color: #1f4e79;
+            font-size: 18px;
+            margin-top: 0;
+        }
+        .seccion a.boton {
+            display: block;
+            margin: 6px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Sistema de Gestión Inmobiliaria</h1>
+
+    <div class="menu-inicio">
+
+        <div class="seccion">
+            <h2>Propiedades</h2>
+            <a href="/propiedades/buscar" th:href="@{/propiedades/buscar}" class="boton">Listado</a>
+            <a href="/propiedades/registrar" th:href="@{/propiedades/registrar}" class="boton">Nueva propiedad</a>
+        </div>
+
+        <div class="seccion">
+            <h2>Publicaciones</h2>
+            <a href="/publicaciones/listado" th:href="@{/publicaciones/listado}" class="boton">Listado</a>
+            <a href="/publicaciones/alta" th:href="@{/publicaciones/alta}" class="boton">Nueva publicación</a>
+        </div>
+
+        <div class="seccion">
+            <h2>Contratos</h2>
+            <a href="/contratos/listado" th:href="@{/contratos/listado}" class="boton">Listado</a>
+            <a href="/contratos/alta" th:href="@{/contratos/alta}" class="boton">Nuevo contrato</a>
+        </div>
+
+        <div class="seccion">
+            <h2>Facturas</h2>
+            <a href="/facturas/listado" th:href="@{/facturas/listado}" class="boton">Listado</a>
+            <a href="/facturas/alta" th:href="@{/facturas/alta}" class="boton">Nueva factura</a>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,55 +1,92 @@
-<html xmlns:th="http://thymeleaf.org">
-
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
+	<meta charset="UTF-8">
 	<title>Listado de Contratos</title>
+	<link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
 </head>
-
 <body>
 
+<div class="contenedor">
 
+	<h1>Contratos</h1>
 
-</html>
-<p th:if="${error}" th:text="${error}"></p>
+	<a href="/" th:href="@{/}" class="boton">Inicio</a>
 
-<h1>Listado de Contratos</h1>
+	<div th:if="${error}" class="mensaje-error">
+		<span th:text="${error}"></span>
+	</div>
 
-<form th:action="@{/contratos/listado}" method="get">
-	<select name="estado">
-		<option value="">Todos</option>
-		<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato).values()}" th:value="${e}"
-				th:text="${e}" th:selected="${e == estado}"></option>
-	</select>
-	<select name="propiedadId">
-		<option value="" th:selected="${propiedadId == null}">Todas</option>
-		<option th:each="p : ${propiedades}" th:value="${p.id}" th:text="${p.direccion}"
-			th:selected="${p.id == propiedadId}"></option>
-		</option>
-	</select>
-	<select name="inquilinoId">
-		<option value="" th:selected="${inquilinoId == null}">Todas</option>
-		<option th:each="p : ${personas}" th:value="${p.id}" th:text="${p.nombre}" th:selected="${p.id == inquilinoId}">
-		</option>
-		</option>
-	</select>
-	<input type="date" name="fechaDesde" th:value="${fechaDesde}" />
-	<input type="date" name="fechaHasta" th:value="${fechaHasta}" />
-	<button type="submit">Filtrar</button>
-</form>
+	<form action="#" th:action="@{/contratos/listado}" method="get">
 
-<table border="1">
-	<thead>
+		<div>
+			<label>Propiedad</label>
+			<select name="propiedadId">
+				<option value="" th:selected="${propiedadId == null}">Todas</option>
+				<option th:each="p : ${propiedades}"
+						th:value="${p.id}"
+						th:text="${p.direccion}"
+						th:selected="${p.id == propiedadId}">
+				</option>
+			</select>
+		</div>
+
+		<div>
+			<label>Inquilino</label>
+			<select name="inquilinoId">
+				<option value="" th:selected="${inquilinoId == null}">Todos</option>
+				<option th:each="p : ${personas}"
+						th:value="${p.id}"
+						th:text="${p.nombre}"
+						th:selected="${p.id == inquilinoId}">
+				</option>
+			</select>
+		</div>
+
+		<div>
+			<label>Estado</label>
+			<select name="estado">
+				<option value="">Todos</option>
+				<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato).values()}"
+						th:value="${e}"
+						th:text="${e}"
+						th:selected="${e == estado}">
+				</option>
+			</select>
+		</div>
+
+		<div>
+			<label>Desde</label>
+			<input type="date" name="fechaDesde" th:value="${fechaDesde}">
+		</div>
+
+		<div>
+			<label>Hasta</label>
+			<input type="date" name="fechaHasta" th:value="${fechaHasta}">
+		</div>
+
+		<button type="submit">Filtrar</button>
+		<a href="/contratos/listado" th:href="@{/contratos/listado}" class="boton">Cancelar</a>
+		<a href="/contratos/alta" th:href="@{/contratos/alta}" class="boton">Nuevo contrato</a>
+
+	</form>
+
+	<table>
+		<thead>
 		<tr>
-			<th>Id</th>
+			<th>ID</th>
 			<th>Propiedad</th>
 			<th>Inquilino</th>
 			<th>Fecha Inicio</th>
 			<th>Importe Mensual</th>
 			<th>Día Vencimiento</th>
 			<th>Estado</th>
-			<th>Acciones</th>
+			<th></th>
+			<th></th>
 		</tr>
-	</thead>
-	<tbody>
+		</thead>
+
+		<tbody>
 		<tr th:each="contrato : ${contratos}">
 			<td th:text="${contrato.id}"></td>
 			<td th:text="${contrato.propiedad.direccion}"></td>
@@ -59,14 +96,24 @@
 			<td th:text="${contrato.diaVencimientoMensual}"></td>
 			<td th:text="${contrato.estado}"></td>
 			<td>
-				<a th:href="@{/contratos/editar/{id}(id=${contrato.id})}">Editar</a>
-
-				<form th:action="@{/contratos/eliminar/{id}(id=${contrato.id})}" method="post" style="display:inline">
-					<button type="submit">Eliminar</button>
+				<a href="#" th:href="@{/contratos/editar/{id}(id=${contrato.id})}" class="boton">editar</a>
+			</td>
+			<td>
+				<form action="#" th:action="@{/contratos/eliminar/{id}(id=${contrato.id})}"
+					  method="post"
+					  onsubmit="return confirm('¿Confirma la eliminación lógica del contrato?');">
+					<button type="submit">eliminar</button>
 				</form>
 			</td>
 		</tr>
+		</tbody>
+	</table>
 
-	</tbody>
-</table>
+	<p th:if="${contratos == null or contratos.isEmpty()}">
+		No se encontraron contratos.
+	</p>
+
+</div>
+
 </body>
+</html>

@@ -1,0 +1,58 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Editar Factura</title>
+</head>
+
+<body>
+	<p th:if="${error}" th:text="${error}"></p>
+	<form th:action="@{/facturas/editar/{id}(id=${factura.id})}" th:object="${factura}" method="post">
+		<label>Contrato:</label>
+		<span th:text="${factura.contrato.propiedad.direccion + ' - ' + factura.contrato.inquilino.nombre}"></span>
+		<!-- El contrato asociado a una factura ya creada es de solo lectura -->
+		<br />
+
+		<label>Concepto facturado:</label>
+		<input type="text" th:field="*{concepto}" /><br />
+
+		<label>Fecha de emisión:</label>
+		<input type="date" th:field="*{fechaEmision}" /><br />
+
+		<label>Fecha de vencimiento:</label>
+		<input type="date" th:field="*{fechaVencimiento}" /><br />
+
+		<label>Importe:</label>
+		<input type="number" th:field="*{importe}" step="0.01" /><br />
+
+		<label>Estado:</label>
+		<select th:field="*{estado}">
+			<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoFactura).values()}"
+				th:value="${e}" th:text="${e}"></option>
+		</select> <br />
+
+		<fieldset>
+			<legend>Datos de pago (completar solo si el estado pasa a "PAGADA")</legend>
+
+			<label>Fecha de pago:</label>
+			<input type="date" th:field="*{fechaPago}" /><br />
+
+			<label>Medio de pago:</label>
+			<select th:field="*{medioPago}">
+				<option value="">-</option>
+				<option th:each="m : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.MedioPago).values()}" th:value="${m}"
+					th:text="${m}"></option>
+			</select> <br />
+
+			<label>Importe pagado:</label>
+			<input type="number" th:field="*{importePagado}" step="0.01" /><br />
+
+			<label>Interés pagado:</label>
+			<input type="number" th:field="*{interesPagado}" step="0.01" /><br />
+		</fieldset>
+
+		<button type="submit">Guardar</button>
+	</form>
+
+</body>
+
+</html>

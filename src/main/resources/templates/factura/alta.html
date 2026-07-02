@@ -1,0 +1,35 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<title>Alta de Factura</title>
+</head>
+
+<body>
+	<p th:if="${error}" th:text="${error}"></p>
+	<form th:action="@{/facturas/alta}" th:object="${factura}" method="post">
+		<label>Contrato:</label>
+		<select th:field="*{contrato}">
+			<option th:each="c : ${contratos}" th:value="${c.id}"
+				th:text="${c.propiedad.direccion + ' - ' + c.inquilino.nombre}"></option>
+		</select> <br />
+
+		<label>Concepto facturado:</label>
+		<input type="text" th:field="*{concepto}" /><br />
+
+		<label>Fecha de emisión:</label>
+		<input type="date" th:field="*{fechaEmision}" /><br />
+
+		<label>Fecha de vencimiento:</label>
+		<input type="date" th:field="*{fechaVencimiento}" /><br />
+
+		<label>Importe:</label>
+		<input type="number" th:field="*{importe}" step="0.01" /><br />
+
+		<!-- El estado por defecto es "pendiente" y los datos de pago se cargan luego, al modificar la factura -->
+
+		<button type="submit">Guardar</button>
+	</form>
+
+</body>
+
+</html>
