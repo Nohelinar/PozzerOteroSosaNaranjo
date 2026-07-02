@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Editar Persona</title>
+	<link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+	<h1>Editar Persona</h1>
+
+	<div th:if="${error}" class="mensaje-error">
+		<span th:text="${error}"></span>
+	</div>
+
+	<form class="formulario-edicion"
+		  action="#"
+		  th:action="@{/personas/editar/{id}(id=${persona.id})}"
+		  method="post"
+		  th:object="${persona}">
+
+		<p>
+			<label>ID:</label>
+			<span th:text="${persona.id}"></span>
+		</p>
+
+		<p>
+			<label>Nombre:</label>
+			<input type="text" th:field="*{nombre}" required>
+		</p>
+
+		<p>
+			<label>Apellido:</label>
+			<input type="text" th:field="*{apellido}" required>
+		</p>
+
+		<button type="submit">Guardar</button>
+		<a href="/personas/listado" th:href="@{/personas/listado}" class="boton">Volver</a>
+
+	</form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Propiedades</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Propiedades</h1>
+
+    <a href="/" th:href="@{/}" class="boton">Inicio</a>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form action="/propiedades/buscar" th:action="@{/propiedades/buscar}" method="get">
+
+        <div>
+            <label>Dirección</label>
+            <input type="text" name="direccion" th:value="${direccion}">
+        </div>
+
+        <div>
+            <label>Ciudad</label>
+            <input type="text" name="ciudad" th:value="${ciudad}">
+        </div>
+
+        <div>
+            <label>Tipo</label>
+            <select name="tipoPropiedad">
+                <option value="">Todos</option>
+                <option th:each="tipo : ${tiposPropiedad}"
+                        th:value="${tipo}"
+                        th:text="${tipo}"
+                        th:selected="${tipo == tipoPropiedadSeleccionada}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label>Estado</label>
+            <select name="estadoPropiedad">
+                <option value="">Todos</option>
+                <option th:each="estado : ${estadosPropiedad}"
+                        th:value="${estado}"
+                        th:text="${estado}"
+                        th:selected="${estado == estadoPropiedadSeleccionado}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit">Buscar</button>
+        <a href="/propiedades/buscar" th:href="@{/propiedades/buscar}" class="boton">Cancelar</a>
+        <a href="/propiedades/registrar" th:href="@{/propiedades/registrar}" class="boton">Registrar</a>
+
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Dirección</th>
+            <th>Ciudad</th>
+            <th>Tipo</th>
+            <th>Ambientes</th>
+            <th>Metros</th>
+            <th>Estado</th>
+            <th>Propietario</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="propiedad : ${propiedades}">
+            <td th:text="${propiedad.id}"></td>
+            <td th:text="${propiedad.direccion}"></td>
+            <td th:text="${propiedad.ciudad}"></td>
+            <td th:text="${propiedad.tipoPropiedad}"></td>
+            <td th:text="${propiedad.cantidadAmbientes}"></td>
+            <td th:text="${propiedad.metrosCuadrados}"></td>
+            <td th:text="${propiedad.estadoPropiedad}"></td>
+            <td th:text="${propiedad.propietario != null ? propiedad.propietario.nombre + ' ' + propiedad.propietario.apellido : 'Sin propietario'}"></td>
+            <td>
+             <a href="#" th:href="@{/propiedades/editar/{id}(id=${propiedad.id})}" class="boton">editar</a>
+            </td>
+            <td>
+                <form action="#" th:action="@{/propiedades/eliminar/{id}(id=${propiedad.id})}"
+                      method="post"
+                      onsubmit="return confirm('¿Confirma la eliminación lógica de la propiedad?');">
+                    <button type="submit">eliminar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${propiedades == null or propiedades.isEmpty()}">
+        No se encontraron propiedades.
+    </p>
+
+</div>
+
+</body>
+</html>
