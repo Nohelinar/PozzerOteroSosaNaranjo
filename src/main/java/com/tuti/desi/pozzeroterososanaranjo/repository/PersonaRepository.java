@@ -11,4 +11,6 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 
     List<Persona> findByEliminadaFalse();
 
+    List<Persona> findByEliminadaFalseOrderByApellidoAscNombreAsc();
+
 }

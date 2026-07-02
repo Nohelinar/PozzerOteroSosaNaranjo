@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<title>Listado de Personas</title>
+	<link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+	<h1>Personas</h1>
+
+	<a href="/" th:href="@{/}" class="boton">Inicio</a>
+
+	<div th:if="${error}" class="mensaje-error">
+		<span th:text="${error}"></span>
+	</div>
+
+	<form action="#" th:action="@{/personas/listado}" method="get">
+
+		<div>
+			<label>Nombre</label>
+			<input type="text" name="nombre" th:value="${nombre}">
+		</div>
+
+		<div>
+			<label>Apellido</label>
+			<input type="text" name="apellido" th:value="${apellido}">
+		</div>
+
+		<button type="submit">Filtrar</button>
+		<a href="/personas/listado" th:href="@{/personas/listado}" class="boton">Cancelar</a>
+		<a href="/personas/alta" th:href="@{/personas/alta}" class="boton">Nueva persona</a>
+
+	</form>
+
+	<table>
+		<thead>
+		<tr>
+			<th>ID</th>
+			<th>Nombre</th>
+			<th>Apellido</th>
+			<th></th>
+			<th></th>
+		</tr>
+		</thead>
+
+		<tbody>
+		<tr th:each="persona : ${personas}">
+			<td th:text="${persona.id}"></td>
+			<td th:text="${persona.nombre}"></td>
+			<td th:text="${persona.apellido}"></td>
+			<td>
+				<a href="#" th:href="@{/personas/editar/{id}(id=${persona.id})}" class="boton">editar</a>
+			</td>
+			<td>
+				<form action="#" th:action="@{/personas/eliminar/{id}(id=${persona.id})}"
+					  method="post"
+					  onsubmit="return confirm('¿Confirma la eliminación lógica de la persona?');">
+					<button type="submit">eliminar</button>
+				</form>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p th:if="${personas == null or personas.isEmpty()}">
+		No se encontraron personas.
+	</p>
+
+</div>
+
+</body>
+</html>

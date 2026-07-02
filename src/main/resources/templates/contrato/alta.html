@@ -1,47 +1,89 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
+	<meta charset="UTF-8">
 	<title>Alta de Contrato</title>
+	<link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
 </head>
-
 <body>
-	<p th:if="${error}" th:text="${error}"></p>
-	<form th:action="@{/contratos/alta}" th:object="${contrato}" method="post">
-		<label>Descripción:</label>
-		<input type="text" th:field="*{descripcion}" /><br />
 
-		<label>Fecha de inicio:</label>
-		<input type="date" th:field="*{fechaInicio}" /><br />
+<div class="contenedor">
 
-		<label>Duración (meses):</label>
-		<input type="number" th:field="*{duracionMeses}" /><br />
+	<h1>Nuevo Contrato</h1>
 
-		<label>Importe mensual:</label>
-		<input type="number" th:field="*{importeMensual}" step="0.01" /><br />
+	<div th:if="${error}" class="mensaje-error">
+		<span th:text="${error}"></span>
+	</div>
 
-		<label>Día de vencimiento:</label>
-		<input type="number" th:field="*{diaVencimientoMensual}" /><br />
+	<form class="formulario-edicion"
+		  action="#"
+		  th:action="@{/contratos/alta}"
+		  method="post"
+		  th:object="${contrato}">
 
-		<label>Propiedad:</label>
-		<select th:field="*{propiedad}">
-			<option th:each="p : ${propiedades}" th:value="${p.id}" th:text="${p.direccion}"></option>
-		</select> <br />
+		<p>
+			<label>Propiedad:</label>
+			<select th:field="*{propiedad}" required>
+				<option value="">Seleccione</option>
+				<option th:each="p : ${propiedades}"
+						th:value="${p.id}"
+						th:text="${p.direccion}">
+				</option>
+			</select>
+		</p>
 
-		<label>Inquilino:</label>
-		<select th:field="*{inquilino}">
-			<option th:each="p : ${personas}" th:value="${p.id}" th:text="${p.nombre}">
-			</option>
-		</select> <br />
+		<p>
+			<label>Inquilino:</label>
+			<select th:field="*{inquilino}" required>
+				<option value="">Seleccione</option>
+				<option th:each="p : ${personas}"
+						th:value="${p.id}"
+						th:text="${p.nombre + ' ' + p.apellido}">
+				</option>
+			</select>
+		</p>
 
-		<label>Estado:</label>
-		<select th:field="*{estado}">
-			<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato).values()}"
-				th:value="${e}" th:text="${e}"></option>
-		</select> <br />
+		<p>
+			<label>Fecha de inicio:</label>
+			<input type="date" th:field="*{fechaInicio}" required>
+		</p>
+
+		<p>
+			<label>Duración (meses):</label>
+			<input type="number" th:field="*{duracionMeses}" min="1" required>
+		</p>
+
+		<p>
+			<label>Importe mensual:</label>
+			<input type="number" step="0.01" th:field="*{importeMensual}" min="0.01" required>
+		</p>
+
+		<p>
+			<label>Día de vencimiento mensual:</label>
+			<input type="number" th:field="*{diaVencimientoMensual}" min="1" max="31" required>
+		</p>
+
+		<p>
+			<label>Descripción:</label><br>
+			<textarea th:field="*{descripcion}" rows="4" cols="60" required></textarea>
+		</p>
+
+		<p>
+			<label>Estado:</label>
+			<select th:field="*{estado}" required>
+				<option th:each="e : ${T(com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato).values()}"
+						th:value="${e}"
+						th:text="${e}">
+				</option>
+			</select>
+		</p>
 
 		<button type="submit">Guardar</button>
+		<a href="/contratos/listado" th:href="@{/contratos/listado}" class="boton">Volver</a>
+
 	</form>
 
-</body>
+</div>
 
+</body>
 </html>

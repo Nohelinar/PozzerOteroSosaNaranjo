@@ -1,35 +1,65 @@
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
+	<meta charset="UTF-8">
 	<title>Alta de Factura</title>
+	<link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
 </head>
-
 <body>
-	<p th:if="${error}" th:text="${error}"></p>
-	<form th:action="@{/facturas/alta}" th:object="${factura}" method="post">
-		<label>Contrato:</label>
-		<select th:field="*{contrato}">
-			<option th:each="c : ${contratos}" th:value="${c.id}"
-				th:text="${c.propiedad.direccion + ' - ' + c.inquilino.nombre}"></option>
-		</select> <br />
 
-		<label>Concepto facturado:</label>
-		<input type="text" th:field="*{concepto}" /><br />
+<div class="contenedor">
 
-		<label>Fecha de emisión:</label>
-		<input type="date" th:field="*{fechaEmision}" /><br />
+	<h1>Nueva Factura</h1>
 
-		<label>Fecha de vencimiento:</label>
-		<input type="date" th:field="*{fechaVencimiento}" /><br />
+	<div th:if="${error}" class="mensaje-error">
+		<span th:text="${error}"></span>
+	</div>
 
-		<label>Importe:</label>
-		<input type="number" th:field="*{importe}" step="0.01" /><br />
+	<form class="formulario-edicion"
+		  action="#"
+		  th:action="@{/facturas/alta}"
+		  method="post"
+		  th:object="${factura}">
+
+		<p>
+			<label>Contrato:</label>
+			<select th:field="*{contrato}" required>
+				<option value="">Seleccione</option>
+				<option th:each="c : ${contratos}"
+						th:value="${c.id}"
+						th:text="${c.propiedad.direccion + ' - ' + c.inquilino.nombre}">
+				</option>
+			</select>
+		</p>
+
+		<p>
+			<label>Concepto facturado:</label>
+			<input type="text" th:field="*{concepto}" required>
+		</p>
+
+		<p>
+			<label>Fecha de emisión:</label>
+			<input type="date" th:field="*{fechaEmision}" required>
+		</p>
+
+		<p>
+			<label>Fecha de vencimiento:</label>
+			<input type="date" th:field="*{fechaVencimiento}" required>
+		</p>
+
+		<p>
+			<label>Importe:</label>
+			<input type="number" step="0.01" th:field="*{importe}" min="0.01" required>
+		</p>
 
 		<!-- El estado por defecto es "pendiente" y los datos de pago se cargan luego, al modificar la factura -->
 
 		<button type="submit">Guardar</button>
+		<a href="/facturas/listado" th:href="@{/facturas/listado}" class="boton">Volver</a>
+
 	</form>
 
-</body>
+</div>
 
+</body>
 </html>
