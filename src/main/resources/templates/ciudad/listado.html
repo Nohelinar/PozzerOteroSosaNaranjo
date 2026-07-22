@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ciudades</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Ciudades</h1>
+
+    <a href="/" th:href="@{/}" class="boton">Inicio</a>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <p>
+        <a href="/ciudades/alta" th:href="@{/ciudades/alta}" class="boton">Nueva ciudad</a>
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Provincia</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="ciudad : ${ciudades}">
+            <td th:text="${ciudad.id}"></td>
+            <td th:text="${ciudad.nombre}"></td>
+            <td th:text="${ciudad.provincia != null ? ciudad.provincia.nombre : ''}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${ciudades == null or ciudades.isEmpty()}">
+        No hay ciudades cargadas.
+    </p>
+
+</div>
+
+</body>
+</html>

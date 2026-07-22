@@ -15,6 +15,7 @@ import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
+import com.tuti.desi.pozzeroterososanaranjo.service.CiudadService;
 import com.tuti.desi.pozzeroterososanaranjo.service.PersonaService;
 import com.tuti.desi.pozzeroterososanaranjo.service.PropiedadService;
 
@@ -26,6 +27,9 @@ public class PropiedadWebController {
 
     @Autowired
     private PersonaService personaService;
+
+    @Autowired
+    private CiudadService ciudadService;
 
     @GetMapping("/propiedades/buscar")
     public String buscarPropiedades(
@@ -134,6 +138,7 @@ public class PropiedadWebController {
 
         model.addAttribute("propiedad", propiedad);
         model.addAttribute("personas", personas);
+        model.addAttribute("ciudades", ciudadService.listar());
         model.addAttribute("tiposPropiedad", TipoPropiedad.values());
         model.addAttribute("estadosPropiedad", EstadoPropiedad.values());
     }

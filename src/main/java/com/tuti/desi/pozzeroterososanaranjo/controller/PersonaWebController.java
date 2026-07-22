@@ -1,4 +1,3 @@
-
 package com.tuti.desi.pozzeroterososanaranjo.controller;
 
 import java.util.List;
@@ -13,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
+import com.tuti.desi.pozzeroterososanaranjo.service.CiudadService;
 import com.tuti.desi.pozzeroterososanaranjo.service.PersonaService;
 
 @Controller
@@ -20,6 +20,9 @@ public class PersonaWebController {
 
 	@Autowired
 	private PersonaService personaService;
+
+	@Autowired
+	private CiudadService ciudadService;
 
 	@GetMapping("/personas/listado")
 	public String listarPersonas(
@@ -40,6 +43,7 @@ public class PersonaWebController {
 	public String mostrarAltaPersona(Model model) {
 
 		model.addAttribute("persona", new Persona());
+		model.addAttribute("ciudades", ciudadService.listar());
 
 		return "persona/alta";
 	}
@@ -54,6 +58,7 @@ public class PersonaWebController {
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("persona", persona);
+			model.addAttribute("ciudades", ciudadService.listar());
 
 			return "persona/alta";
 		}
@@ -65,6 +70,7 @@ public class PersonaWebController {
 		try {
 			Persona personaAEditar = personaService.buscarPorId(id);
 			model.addAttribute("persona", personaAEditar);
+			model.addAttribute("ciudades", ciudadService.listar());
 
 			return "persona/editar";
 
@@ -86,6 +92,7 @@ public class PersonaWebController {
 		} catch (RuntimeException e) {
 			model.addAttribute("error", e.getMessage());
 			model.addAttribute("persona", persona);
+			model.addAttribute("ciudades", ciudadService.listar());
 
 			return "persona/editar";
 		}

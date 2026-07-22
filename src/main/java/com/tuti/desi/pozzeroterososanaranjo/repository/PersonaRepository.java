@@ -13,4 +13,8 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 
     List<Persona> findByEliminadaFalseOrderByApellidoAscNombreAsc();
 
+    boolean existsByDniCuitAndEliminadaFalse(String dniCuit);
+
+    boolean existsByDniCuitAndEliminadaFalseAndIdNot(String dniCuit, Long id);
+
 }

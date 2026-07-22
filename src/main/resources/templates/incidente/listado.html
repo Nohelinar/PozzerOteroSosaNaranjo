@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Incidentes</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Incidentes</h1>
+
+    <a href="/" th:href="@{/}" class="boton">Inicio</a>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form action="#" th:action="@{/incidentes/listado}" method="get">
+
+        <div>
+            <label>Propiedad</label>
+            <select name="propiedadId">
+                <option value="">Todas</option>
+                <option th:each="p : ${propiedades}"
+                        th:value="${p.id}"
+                        th:selected="${propiedadId != null and propiedadId == p.id}"
+                        th:text="${p.direccion}">
+                </option>
+            </select>
+        </div>
+
+        <div>
+            <label>Estado</label>
+            <select name="estado">
+                <option value="">Todos</option>
+                <option th:each="e : ${estados}"
+                        th:value="${e}"
+                        th:selected="${estado != null and estado == e}"
+                        th:text="${e}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit">Filtrar</button>
+        <a href="/incidentes/listado" th:href="@{/incidentes/listado}" class="boton">Cancelar</a>
+        <a href="/incidentes/alta" th:href="@{/incidentes/alta}" class="boton">Nuevo incidente</a>
+
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Propiedad</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Fecha alta</th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="incidente : ${incidentes}">
+            <td th:text="${incidente.id}"></td>
+            <td th:text="${incidente.propiedad.direccion}"></td>
+            <td th:text="${incidente.titulo}"></td>
+            <td th:text="${incidente.categoria}"></td>
+            <td th:text="${incidente.prioridad}"></td>
+            <td th:text="${incidente.estado}"></td>
+            <td th:text="${incidente.fechaAlta}"></td>
+            <td>
+                <a href="#" th:href="@{/incidentes/editar/{id}(id=${incidente.id})}" class="boton">editar</a>
+            </td>
+            <td>
+                <form action="#" th:action="@{/incidentes/eliminar/{id}(id=${incidente.id})}"
+                      method="post"
+                      onsubmit="return confirm('¿Confirma la eliminación lógica del incidente?');">
+                    <button type="submit">eliminar</button>
+                </form>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${incidentes == null or incidentes.isEmpty()}">
+        No se encontraron incidentes.
+    </p>
+
+</div>
+
+</body>
+</html>

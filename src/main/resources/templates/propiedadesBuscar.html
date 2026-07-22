@@ -80,7 +80,7 @@
         <tr th:each="propiedad : ${propiedades}">
             <td th:text="${propiedad.id}"></td>
             <td th:text="${propiedad.direccion}"></td>
-            <td th:text="${propiedad.ciudad}"></td>
+            <td th:text="${propiedad.ciudad != null ? propiedad.ciudad.nombre : ''}"></td>
             <td th:text="${propiedad.tipoPropiedad}"></td>
             <td th:text="${propiedad.cantidadAmbientes}"></td>
             <td th:text="${propiedad.metrosCuadrados}"></td>

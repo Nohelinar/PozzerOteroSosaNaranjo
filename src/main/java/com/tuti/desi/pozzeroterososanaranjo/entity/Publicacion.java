@@ -50,6 +50,9 @@ public class Publicacion {
     @OneToMany(mappedBy = "publicacion")
     private List<HistorialEstadoPublicacion> historialEstados;
 
+    @OneToMany(mappedBy = "publicacion")
+    private List<Visita> visitas;
+
     public Long getId() {
         return id;
     }
@@ -120,5 +123,13 @@ public class Publicacion {
 
     public void setHistorialEstados(List<HistorialEstadoPublicacion> historialEstados) {
         this.historialEstados = historialEstados;
+    }
+
+    public List<Visita> getVisitas() {
+        return visitas;
+    }
+
+    public void setVisitas(List<Visita> visitas) {
+        this.visitas = visitas;
     }
 }

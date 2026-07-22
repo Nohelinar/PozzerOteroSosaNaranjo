@@ -94,7 +94,7 @@
 		<tr th:each="publicacion : ${publicaciones}">
 			<td th:text="${publicacion.id}"></td>
 			<td th:text="${publicacion.propiedad.direccion}"></td>
-			<td th:text="${publicacion.propiedad.ciudad}"></td>
+			<td th:text="${publicacion.propiedad.ciudad != null ? publicacion.propiedad.ciudad.nombre : ''}"></td>
 			<td th:text="${publicacion.precioMensual}"></td>
 			<td th:text="${publicacion.fechaPublicacion}"></td>
 			<td th:text="${publicacion.estado}"></td>

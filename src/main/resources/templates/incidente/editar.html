@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Incidente</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Editar Incidente</h1>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form class="formulario-edicion"
+          action="#"
+          th:action="@{/incidentes/editar/{id}(id=${incidente.id})}"
+          method="post"
+          th:object="${incidente}">
+
+        <p>
+            <label>ID:</label>
+            <span th:text="${incidente.id}"></span>
+        </p>
+
+        <p>
+            <label>Propiedad:</label>
+            <span th:text="${incidente.propiedad.direccion}"></span>
+            <input type="hidden" name="propiedad" th:value="${incidente.propiedad.id}">
+            <!-- La propiedad asociada es de solo lectura una vez creado el incidente -->
+        </p>
+
+        <p>
+            <label>Título:</label>
+            <input type="text" th:field="*{titulo}" required>
+        </p>
+
+        <p>
+            <label>Descripción:</label><br>
+            <textarea th:field="*{descripcion}" rows="4" cols="60" required></textarea>
+        </p>
+
+        <p>
+            <label>Categoría:</label>
+            <select th:field="*{categoria}" required>
+                <option th:each="c : ${categorias}" th:value="${c}" th:text="${c}"></option>
+            </select>
+        </p>
+
+        <p>
+            <label>Prioridad:</label>
+            <select th:field="*{prioridad}" required>
+                <option th:each="p : ${prioridades}" th:value="${p}" th:text="${p}"></option>
+            </select>
+        </p>
+
+        <p>
+            <label>Estado:</label>
+            <select th:field="*{estado}" required>
+                <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"></option>
+            </select>
+        </p>
+
+        <p>
+            <label>Responsable técnico:</label>
+            <input type="text" th:field="*{responsableTecnico}">
+        </p>
+
+        <fieldset>
+            <legend>Resolución (completar al resolver el incidente)</legend>
+
+            <p>
+                <label>Fecha de resolución:</label>
+                <input type="datetime-local" th:field="*{fechaResolucion}">
+            </p>
+
+            <p>
+                <label>Observaciones de resolución:</label><br>
+                <textarea th:field="*{observacionesResolucion}" rows="3" cols="60"></textarea>
+            </p>
+
+            <p>
+                <label>Costo de resolución:</label>
+                <input type="number" step="0.01" th:field="*{costoResolucion}" min="0">
+            </p>
+        </fieldset>
+
+        <button type="submit">Guardar</button>
+        <a href="/incidentes/listado" th:href="@{/incidentes/listado}" class="boton">Volver</a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

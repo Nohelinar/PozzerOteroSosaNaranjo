@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Provincia</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Nueva Provincia</h1>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form class="formulario-edicion"
+          action="#"
+          th:action="@{/provincias/alta}"
+          method="post"
+          th:object="${provincia}">
+
+        <p>
+            <label>Nombre:</label>
+            <input type="text" th:field="*{nombre}" required>
+        </p>
+
+        <button type="submit">Guardar</button>
+        <a href="/provincias/listado" th:href="@{/provincias/listado}" class="boton">Volver</a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Provincias</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Provincias</h1>
+
+    <a href="/" th:href="@{/}" class="boton">Inicio</a>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <p>
+        <a href="/provincias/alta" th:href="@{/provincias/alta}" class="boton">Nueva provincia</a>
+    </p>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="provincia : ${provincias}">
+            <td th:text="${provincia.id}"></td>
+            <td th:text="${provincia.nombre}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${provincias == null or provincias.isEmpty()}">
+        No hay provincias cargadas.
+    </p>
+
+</div>
+
+</body>
+</html>

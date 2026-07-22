@@ -117,6 +117,8 @@ public class FacturaService {
 			throw new RuntimeException("Solo se pueden registrar datos de pago si la factura queda en estado pagada.");
 		}
 
+		EstadoFactura estadoAnterior = facturaExistente.getEstado();
+
 		// El contrato asociado a una factura ya creada es de solo lectura.
 		facturaExistente.setConcepto(facturaModificada.getConcepto());
 		facturaExistente.setFechaEmision(facturaModificada.getFechaEmision());
@@ -130,7 +132,9 @@ public class FacturaService {
 
 		Factura facturaGuardada = facturaRepository.save(facturaExistente);
 
-		guardarHistorialEstado(facturaGuardada);
+		if (estadoAnterior != facturaGuardada.getEstado()) {
+			guardarHistorialEstado(facturaGuardada);
+		}
 
 		return facturaGuardada;
 	}

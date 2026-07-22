@@ -36,6 +36,37 @@
 			<input type="text" th:field="*{apellido}" required>
 		</p>
 
+		<p>
+			<label>DNI/CUIT:</label>
+			<input type="text" th:field="*{dniCuit}" required>
+		</p>
+
+		<p>
+			<label>Teléfono:</label>
+			<input type="text" th:field="*{telefono}">
+		</p>
+
+		<p>
+			<label>Email:</label>
+			<input type="email" th:field="*{email}">
+		</p>
+
+		<p>
+			<label>Domicilio:</label>
+			<input type="text" th:field="*{domicilio}">
+		</p>
+
+		<p>
+			<label>Ciudad:</label>
+			<select th:field="*{ciudad.id}">
+				<option value="">Sin especificar</option>
+				<option th:each="c : ${ciudades}"
+						th:value="${c.id}"
+						th:text="${c.nombre + (c.provincia != null ? ' (' + c.provincia.nombre + ')' : '')}">
+				</option>
+			</select>
+		</p>
+
 		<button type="submit">Guardar</button>
 		<a href="/personas/listado" th:href="@{/personas/listado}" class="boton">Volver</a>
 

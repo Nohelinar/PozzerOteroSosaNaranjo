@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Visitas</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Visitas</h1>
+
+    <a href="/" th:href="@{/}" class="boton">Inicio</a>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form action="#" th:action="@{/visitas/listado}" method="get">
+
+        <div>
+            <label>Publicación</label>
+            <select name="publicacionId">
+                <option value="">Todas</option>
+                <option th:each="p : ${publicaciones}"
+                        th:value="${p.id}"
+                        th:selected="${publicacionId != null and publicacionId == p.id}"
+                        th:text="${p.propiedad.direccion}">
+                </option>
+            </select>
+        </div>
+
+        <button type="submit">Filtrar</button>
+        <a href="/visitas/listado" th:href="@{/visitas/listado}" class="boton">Cancelar</a>
+        <a href="/visitas/alta" th:href="@{/visitas/alta}" class="boton">Nueva visita</a>
+
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Publicación</th>
+            <th>Fecha y hora</th>
+            <th>Estado</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="visita : ${visitas}">
+            <td th:text="${visita.id}"></td>
+            <td th:text="${visita.publicacion.propiedad.direccion}"></td>
+            <td th:text="${visita.fechaHora}"></td>
+            <td th:text="${visita.estado}"></td>
+            <td>
+                <a href="#" th:href="@{/visitas/editar/{id}(id=${visita.id})}" class="boton">editar</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p th:if="${visitas == null or visitas.isEmpty()}">
+        No se encontraron visitas.
+    </p>
+
+</div>
+
+</body>
+</html>

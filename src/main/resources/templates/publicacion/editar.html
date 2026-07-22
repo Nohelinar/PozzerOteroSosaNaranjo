@@ -28,7 +28,7 @@
 
 		<p>
 			<label>Propiedad:</label>
-			<span th:text="${publicacion.propiedad.direccion + ' - ' + publicacion.propiedad.ciudad}"></span>
+			<span th:text="${publicacion.propiedad.direccion + ' - ' + (publicacion.propiedad.ciudad != null ? publicacion.propiedad.ciudad.nombre : '')}"></span>
 			<!-- La propiedad asociada es de solo lectura una vez creada la publicación -->
 		</p>
 

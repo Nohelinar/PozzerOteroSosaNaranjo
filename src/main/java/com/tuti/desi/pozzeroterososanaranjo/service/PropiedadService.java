@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.tuti.desi.pozzeroterososanaranjo.entity.Ciudad;
 import com.tuti.desi.pozzeroterososanaranjo.entity.HistorialEstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
@@ -15,6 +16,7 @@ import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoContrato;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.TipoPropiedad;
 import com.tuti.desi.pozzeroterososanaranjo.repository.ContratoRepository;
+import com.tuti.desi.pozzeroterososanaranjo.repository.CiudadRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.HistorialEstadoPropiedadRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PersonaRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PropiedadRepository;
@@ -27,6 +29,9 @@ public class PropiedadService {
 
     @Autowired
     private PersonaRepository personaRepository;
+
+    @Autowired
+    private CiudadRepository ciudadRepository;
 
     @Autowired
     private HistorialEstadoPropiedadRepository historialEstadoPropiedadRepository;
@@ -53,7 +58,7 @@ public class PropiedadService {
                     || contieneTexto(propiedad.getDireccion(), direccion);
 
             boolean cumpleCiudad = ciudad == null || ciudad.trim().isEmpty()
-                    || contieneTexto(propiedad.getCiudad(), ciudad);
+                    || (propiedad.getCiudad() != null && contieneTexto(propiedad.getCiudad().getNombre(), ciudad));
 
             boolean cumpleTipo = tipoPropiedad == null
                     || tipoPropiedad.equals(propiedad.getTipoPropiedad());
@@ -89,6 +94,8 @@ public class PropiedadService {
 
         Persona propietario = buscarYValidarPropietario(propiedad);
         propiedad.setPropietario(propietario);
+
+        propiedad.setCiudad(buscarYValidarCiudad(propiedad));
 
         if (propiedad.getEstadoPropiedad() == null) {
             propiedad.setEstadoPropiedad(EstadoPropiedad.DISPONIBLE);
@@ -132,6 +139,7 @@ public class PropiedadService {
         }
 
         Persona propietario = buscarYValidarPropietario(propiedadActualizada);
+        Ciudad ciudad = buscarYValidarCiudad(propiedadActualizada);
 
         if (propiedadRepository.existsByDireccionAndCiudadAndEliminadaFalseAndIdNot(
                 propiedadActualizada.getDireccion(),
@@ -151,7 +159,7 @@ public class PropiedadService {
         EstadoPropiedad estadoAnterior = propiedadExistente.getEstadoPropiedad();
 
         propiedadExistente.setDireccion(propiedadActualizada.getDireccion());
-        propiedadExistente.setCiudad(propiedadActualizada.getCiudad());
+        propiedadExistente.setCiudad(ciudad);
         propiedadExistente.setTipoPropiedad(propiedadActualizada.getTipoPropiedad());
         propiedadExistente.setCantidadAmbientes(propiedadActualizada.getCantidadAmbientes());
         propiedadExistente.setMetrosCuadrados(propiedadActualizada.getMetrosCuadrados());
@@ -192,7 +200,7 @@ public class PropiedadService {
             throw new RuntimeException("La direccion es obligatoria.");
         }
 
-        if (propiedad.getCiudad() == null || propiedad.getCiudad().trim().isEmpty()) {
+        if (propiedad.getCiudad() == null || propiedad.getCiudad().getId() == null) {
             throw new RuntimeException("La ciudad es obligatoria.");
         }
 
@@ -227,6 +235,12 @@ public class PropiedadService {
         }
 
         return propietario;
+    }
+
+    private Ciudad buscarYValidarCiudad(Propiedad propiedad) {
+
+        return ciudadRepository.findById(propiedad.getCiudad().getId())
+                .orElseThrow(() -> new RuntimeException("La ciudad indicada no existe."));
     }
 
     private void guardarHistorialEstado(Propiedad propiedad) {

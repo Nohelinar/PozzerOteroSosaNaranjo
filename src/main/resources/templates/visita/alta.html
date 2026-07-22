@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Visita</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Nueva Visita</h1>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form class="formulario-edicion"
+          action="#"
+          th:action="@{/visitas/alta}"
+          method="post"
+          th:object="${visita}">
+
+        <p>
+            <label>Publicación:</label>
+            <select th:field="*{publicacion}" required>
+                <option value="">Seleccione</option>
+                <option th:each="p : ${publicaciones}"
+                        th:value="${p.id}"
+                        th:text="${p.propiedad.direccion}">
+                </option>
+            </select>
+        </p>
+
+        <p>
+            <label>Fecha y hora:</label>
+            <input type="datetime-local" th:field="*{fechaHora}" required>
+        </p>
+
+        <p>
+            <label>Estado:</label>
+            <select th:field="*{estado}" required>
+                <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"></option>
+            </select>
+        </p>
+
+        <button type="submit">Guardar</button>
+        <a href="/visitas/listado" th:href="@{/visitas/listado}" class="boton">Volver</a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

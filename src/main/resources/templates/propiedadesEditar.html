@@ -34,7 +34,12 @@
 
         <p>
             <label>Ciudad:</label>
-            <input type="text" th:field="*{ciudad}" required>
+            <select th:field="*{ciudad.id}" required>
+                <option th:each="c : ${ciudades}"
+                        th:value="${c.id}"
+                        th:text="${c.nombre + (c.provincia != null ? ' (' + c.provincia.nombre + ')' : '')}">
+                </option>
+            </select>
         </p>
 
         <p>

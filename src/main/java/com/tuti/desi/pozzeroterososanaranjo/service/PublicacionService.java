@@ -146,7 +146,8 @@ public class PublicacionService {
 
 			boolean cumpleCiudad = ciudad == null || ciudad.trim().isEmpty()
 					|| (publicacion.getPropiedad() != null && publicacion.getPropiedad().getCiudad() != null
-					&& publicacion.getPropiedad().getCiudad().toLowerCase()
+					&& publicacion.getPropiedad().getCiudad().getNombre() != null
+					&& publicacion.getPropiedad().getCiudad().getNombre().toLowerCase()
 					.contains(ciudad.toLowerCase().trim()));
 
 			boolean cumpleEstado = estado == null || estado.equals(publicacion.getEstado());

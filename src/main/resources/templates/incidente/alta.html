@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Incidente</title>
+    <link rel="stylesheet" href="/css/main.css" th:href="@{/css/main.css}">
+</head>
+<body>
+
+<div class="contenedor">
+
+    <h1>Nuevo Incidente</h1>
+
+    <div th:if="${error}" class="mensaje-error">
+        <span th:text="${error}"></span>
+    </div>
+
+    <form class="formulario-edicion"
+          action="#"
+          th:action="@{/incidentes/alta}"
+          method="post"
+          th:object="${incidente}">
+
+        <p>
+            <label>Propiedad:</label>
+            <select th:field="*{propiedad}" required>
+                <option value="">Seleccione</option>
+                <option th:each="p : ${propiedades}"
+                        th:value="${p.id}"
+                        th:text="${p.direccion}">
+                </option>
+            </select>
+        </p>
+
+        <p>
+            <label>Título:</label>
+            <input type="text" th:field="*{titulo}" required>
+        </p>
+
+        <p>
+            <label>Descripción:</label><br>
+            <textarea th:field="*{descripcion}" rows="4" cols="60" required></textarea>
+        </p>
+
+        <p>
+            <label>Categoría:</label>
+            <select th:field="*{categoria}" required>
+                <option th:each="c : ${categorias}" th:value="${c}" th:text="${c}"></option>
+            </select>
+        </p>
+
+        <p>
+            <label>Prioridad:</label>
+            <select th:field="*{prioridad}" required>
+                <option th:each="p : ${prioridades}" th:value="${p}" th:text="${p}"></option>
+            </select>
+        </p>
+
+        <p>
+            <label>Estado:</label>
+            <select th:field="*{estado}" required>
+                <option th:each="e : ${estados}" th:value="${e}" th:text="${e}"></option>
+            </select>
+        </p>
+
+        <p>
+            <label>Responsable técnico:</label>
+            <input type="text" th:field="*{responsableTecnico}">
+        </p>
+
+        <button type="submit">Guardar</button>
+        <a href="/incidentes/listado" th:href="@{/incidentes/listado}" class="boton">Volver</a>
+
+    </form>
+
+</div>
+
+</body>
+</html>

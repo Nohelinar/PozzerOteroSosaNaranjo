@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.tuti.desi.pozzeroterososanaranjo.entity.Persona;
+import com.tuti.desi.pozzeroterososanaranjo.repository.CiudadRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.ContratoRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PersonaRepository;
 import com.tuti.desi.pozzeroterososanaranjo.repository.PropiedadRepository;
@@ -24,6 +25,9 @@ public class PersonaService {
 
     @Autowired
     private ContratoRepository contratoRepository;
+
+    @Autowired
+    private CiudadRepository ciudadRepository;
 
     public List<Persona> listarNoEliminadas() {
         return personaRepository.findByEliminadaFalseOrderByApellidoAscNombreAsc();
@@ -67,6 +71,12 @@ public class PersonaService {
 
         validarPersona(persona);
 
+        if (personaRepository.existsByDniCuitAndEliminadaFalse(persona.getDniCuit().trim())) {
+            throw new RuntimeException("Ya existe una persona activa con ese DNI/CUIT.");
+        }
+
+        persona.setCiudad(resolverCiudadOpcional(persona));
+
         if (persona.getEliminada() == null) {
             persona.setEliminada(false);
         }
@@ -86,8 +96,17 @@ public class PersonaService {
 
         validarPersona(personaActualizada);
 
+        if (personaRepository.existsByDniCuitAndEliminadaFalseAndIdNot(personaActualizada.getDniCuit().trim(), id)) {
+            throw new RuntimeException("Ya existe otra persona activa con ese DNI/CUIT.");
+        }
+
         personaExistente.setNombre(personaActualizada.getNombre());
         personaExistente.setApellido(personaActualizada.getApellido());
+        personaExistente.setDniCuit(personaActualizada.getDniCuit());
+        personaExistente.setTelefono(personaActualizada.getTelefono());
+        personaExistente.setEmail(personaActualizada.getEmail());
+        personaExistente.setDomicilio(personaActualizada.getDomicilio());
+        personaExistente.setCiudad(resolverCiudadOpcional(personaActualizada));
 
         return personaRepository.save(personaExistente);
     }
@@ -123,6 +142,20 @@ public class PersonaService {
         if (persona.getApellido() == null || persona.getApellido().trim().isEmpty()) {
             throw new RuntimeException("El apellido es obligatorio.");
         }
+
+        if (persona.getDniCuit() == null || persona.getDniCuit().trim().isEmpty()) {
+            throw new RuntimeException("El DNI/CUIT es obligatorio.");
+        }
+    }
+
+    private com.tuti.desi.pozzeroterososanaranjo.entity.Ciudad resolverCiudadOpcional(Persona persona) {
+
+        if (persona.getCiudad() == null || persona.getCiudad().getId() == null) {
+            return null;
+        }
+
+        return ciudadRepository.findById(persona.getCiudad().getId())
+                .orElseThrow(() -> new RuntimeException("La ciudad indicada no existe."));
     }
 
     private boolean contieneTexto(String textoCompleto, String textoBuscado) {

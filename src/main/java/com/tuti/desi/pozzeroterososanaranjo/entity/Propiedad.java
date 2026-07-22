@@ -22,7 +22,9 @@ public class Propiedad {
 
     private String direccion;
 
-    private String ciudad;
+    @ManyToOne
+    @JoinColumn(name = "ciudad_id")
+    private Ciudad ciudad;
 
     @Enumerated(EnumType.STRING)
     private TipoPropiedad tipoPropiedad;
@@ -58,11 +60,11 @@ public class Propiedad {
         this.direccion = direccion;
     }
 
-    public String getCiudad() {
+    public Ciudad getCiudad() {
         return ciudad;
     }
 
-    public void setCiudad(String ciudad) {
+    public void setCiudad(Ciudad ciudad) {
         this.ciudad = ciudad;
     }
 

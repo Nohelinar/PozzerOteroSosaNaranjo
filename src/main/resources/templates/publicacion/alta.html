@@ -27,7 +27,7 @@
 				<option value="">Seleccione</option>
 				<option th:each="p : ${propiedades}"
 						th:value="${p.id}"
-						th:text="${p.direccion + ' - ' + p.ciudad}">
+						th:text="${p.direccion + ' - ' + (p.ciudad != null ? p.ciudad.nombre : '')}">
 				</option>
 			</select>
 		</p>

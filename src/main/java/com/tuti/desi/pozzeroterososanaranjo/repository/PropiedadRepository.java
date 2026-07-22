@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.tuti.desi.pozzeroterososanaranjo.entity.Ciudad;
 import com.tuti.desi.pozzeroterososanaranjo.entity.Propiedad;
 import com.tuti.desi.pozzeroterososanaranjo.enums.EstadoPropiedad;
 
 public interface PropiedadRepository extends JpaRepository<Propiedad, Long> {
 
-    boolean existsByDireccionAndCiudadAndEliminadaFalse(String direccion, String ciudad);
+    boolean existsByDireccionAndCiudadAndEliminadaFalse(String direccion, Ciudad ciudad);
 
-    boolean existsByDireccionAndCiudadAndEliminadaFalseAndIdNot(String direccion, String ciudad, Long id);
+    boolean existsByDireccionAndCiudadAndEliminadaFalseAndIdNot(String direccion, Ciudad ciudad, Long id);
 
     List<Propiedad> findByEliminadaFalse();
 

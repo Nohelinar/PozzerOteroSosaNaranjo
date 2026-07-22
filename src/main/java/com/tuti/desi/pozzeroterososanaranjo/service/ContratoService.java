@@ -146,6 +146,8 @@ public class ContratoService {
 			propiedadRepository.save(contratoModificado.getPropiedad());
 		}
 
+		EstadoContrato estadoAnterior = contratoExistente.getEstado();
+
 		contratoExistente.setPropiedad(contratoModificado.getPropiedad());
 		contratoExistente.setInquilino(contratoModificado.getInquilino());
 		contratoExistente.setFechaInicio(contratoModificado.getFechaInicio());
@@ -157,7 +159,9 @@ public class ContratoService {
 
 		Contrato contratoGuardado = contratoRepository.save(contratoExistente);
 
-		guardarHistorialEstadoContrato(contratoGuardado);
+		if (estadoAnterior != contratoGuardado.getEstado()) {
+			guardarHistorialEstadoContrato(contratoGuardado);
+		}
 
 		return contratoGuardado;
 

@@ -41,6 +41,8 @@
 			<th>ID</th>
 			<th>Nombre</th>
 			<th>Apellido</th>
+			<th>DNI/CUIT</th>
+			<th>Teléfono</th>
 			<th></th>
 			<th></th>
 		</tr>
@@ -51,6 +53,8 @@
 			<td th:text="${persona.id}"></td>
 			<td th:text="${persona.nombre}"></td>
 			<td th:text="${persona.apellido}"></td>
+			<td th:text="${persona.dniCuit}"></td>
+			<td th:text="${persona.telefono}"></td>
 			<td>
 				<a href="#" th:href="@{/personas/editar/{id}(id=${persona.id})}" class="boton">editar</a>
 			</td>
